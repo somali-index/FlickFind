@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.*
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.flickfind.ui.auth.AuthScreen
 import com.example.flickfind.ui.home.HomeScreen
 import com.example.flickfind.ui.theme.FlickFindTheme
@@ -34,5 +35,13 @@ fun FlickFindApp() {
         AuthScreen(
             onLoginSuccess = { isLoggedIn = true }
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun prvScreen() {
+    FlickFindTheme {
+        FlickFindApp()
     }
 }
