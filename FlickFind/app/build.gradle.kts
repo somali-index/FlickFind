@@ -43,6 +43,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:21.5.1")
 
     // Icons extended (cho Icons.Filled.Movie, Email, v.v.)
     implementation("androidx.compose.material:material-icons-extended:1.7.0")

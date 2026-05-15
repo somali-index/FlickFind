@@ -7,8 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.flickfind.ui.auth.AuthScreen
-import com.example.flickfind.ui.home.HomeScreen
+import com.example.flickfind.ui.home.LoginScreen
+import com.example.flickfind.ui.home.LoginScreen
 import com.example.flickfind.ui.theme.FlickFindTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,24 +26,29 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun FlickFindApp() {
-    // Trạng thái đăng nhập — lưu trong remember (chỉ tồn tại trong session)
-    var isLoggedIn by remember { mutableStateOf(false) }
 
-    if (isLoggedIn) {
-        HomeScreen(
-            onLogout = { isLoggedIn = false }
-        )
-    } else {
-        AuthScreen(
-            onLoginSuccess = { isLoggedIn = true }
+    var isLoggedIn by remember {
+        mutableStateOf(
+            FirebaseAuth.getInstance().currentUser != null
         )
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun prvScreen() {
-    FlickFindTheme {
-        FlickFindApp()
+    if (isLoggedIn) {
+
+        LoginScreen (
+            onLogout = {
+
+                FirebaseAuth.getInstance().signOut()
+                isLoggedIn = false
+            }
+        )
+
+    } else {
+
+        AuthScreen(
+            onLoginSuccess = {
+                isLoggedIn = true
+            }
+        )
     }
 }
