@@ -27,6 +27,7 @@ fun AuthScreen(
     // Tự động chuyển màn hình khi đăng nhập / đăng ký thành công
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) onLoginSuccess()
+        viewModel.resetSuccessState()
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {

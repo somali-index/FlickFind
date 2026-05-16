@@ -74,6 +74,20 @@ class AuthViewModel : ViewModel() {
             )
         }
     }
+    fun logout() {
+        auth.signOut()
+
+        _uiState.update {
+            AuthUiState(
+                isLoginMode = true
+            )
+        }
+    }
+    fun resetSuccessState() {
+        _uiState.update {
+            it.copy(isSuccess = false)
+        }
+    }
 
     // ── Validate ────────────────────────────────────────────────
 
