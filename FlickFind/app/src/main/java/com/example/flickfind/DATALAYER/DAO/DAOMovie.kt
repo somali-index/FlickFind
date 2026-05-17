@@ -4,19 +4,19 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.flickfind.testTinhNang.dataLayerTest.ROOM.UNITYTest
+import com.example.flickfind.DATALAYER.Room.RoomMovies
 
 @Dao
 interface DAOMovie {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovie(movie: UNITYTest)
+    suspend fun insertMovie(movie: RoomMovies)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovies(list: List<UNITYTest>)
+    suspend fun insertMovies(list: List<RoomMovies>)
 
     @Query("SELECT * FROM movieData")
-    suspend fun getAllMovies(): List<UNITYTest>
+    suspend fun getAllMovies(): List<RoomMovies>
 
     @Query("DELETE FROM movieData")
     suspend fun clearAll()
