@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.flickfind.app-mergeDebugResources-69:/values-watch-v20/values-watch-v20.xml",
+            "outputFile": "com.example.flickfind.app-mergeDebugResources-63:/values-watch-v20/values-watch-v20.xml",
             "map": [
                 {
                     "source": "C:\\Users\\zzzam\\.gradle\\caches\\8.9\\transforms\\d66166d5b3fa5e3c5c1c2bbba94774f8\\transformed\\play-services-auth-21.5.1\\res\\values-watch-v20\\values.xml",

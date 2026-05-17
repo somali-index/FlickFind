@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.flickfind.app-mergeDebugResources-69:/values-pt/values-pt.xml",
+            "outputFile": "com.example.flickfind.app-mergeDebugResources-63:/values-pt/values-pt.xml",
             "map": [
                 {
                     "source": "C:\\Users\\zzzam\\.gradle\\caches\\8.9\\transforms\\cca67ebad767a232cc01c1943b16fa3b\\transformed\\material3-release\\res\\values-pt\\values-pt.xml",

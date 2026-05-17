@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.flickfind.app-mergeDebugResources-69:/values-en-rIN/values-en-rIN.xml",
+            "outputFile": "com.example.flickfind.app-mergeDebugResources-63:/values-en-rIN/values-en-rIN.xml",
             "map": [
                 {
                     "source": "C:\\Users\\zzzam\\.gradle\\caches\\8.9\\transforms\\e03b9d03cac11c0a568133c9afbb7cd1\\transformed\\ui-release\\res\\values-en-rIN\\values-en-rIN.xml",

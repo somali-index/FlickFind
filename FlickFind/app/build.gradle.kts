@@ -3,8 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
-    id("org.jetbrains.kotlin.kapt")
-
 }
 
 android {
@@ -45,24 +43,18 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-
-    // Firebase BOM (CHỈ 1 CÁI DUY NHẤT)
     implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
-
-    // Firebase (KHÔNG dùng -ktx)
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-analytics")
-
     implementation("com.google.android.gms:play-services-auth:21.5.1")
 
+    // Icons extended (cho Icons.Filled.Movie, Email, v.v.)
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
+
+    // ViewModel cho Jetpack Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("androidx.room:room-runtime:2.7.0")
-    implementation("androidx.room:room-ktx:2.7.0")
-    kapt("androidx.room:room-compiler:2.7.0")
+    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
