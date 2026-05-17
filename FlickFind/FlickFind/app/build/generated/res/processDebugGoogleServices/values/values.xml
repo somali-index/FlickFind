@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="gcm_defaultSenderId" translatable="false">764703131526</string>
-    <string name="google_api_key" translatable="false">AIzaSyAO5fiHGkDj-Eq4wFFiXDS4uW6qXA2wC6g</string>
-    <string name="google_app_id" translatable="false">1:764703131526:android:968c2bc222ce9a0aa1ce07</string>
-    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAO5fiHGkDj-Eq4wFFiXDS4uW6qXA2wC6g</string>
-    <string name="google_storage_bucket" translatable="false">flickfind-5d618.firebasestorage.app</string>
-    <string name="project_id" translatable="false">flickfind-5d618</string>
-</resources>
