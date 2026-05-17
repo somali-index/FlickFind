@@ -1,12 +1,11 @@
-package com.example.flickfind.testTinhNang.dataLayerTest.ROOM
+package com.example.flickfind.DATALAYER.Room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "movieData")
 
-data class UNITYTest(
-
+data class RoomMovies(
     @PrimaryKey
     val IDMovie: String,
 

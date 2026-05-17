@@ -1,4 +1,4 @@
-package com.example.flickfind.testTinhNang.dataLayerTest.DAO
+package com.example.flickfind.DATALAYER.DAO
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -7,7 +7,7 @@ import androidx.room.Query
 import com.example.flickfind.testTinhNang.dataLayerTest.ROOM.UNITYTest
 
 @Dao
-interface DAOTest {
+interface DAOMovie {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie: UNITYTest)
