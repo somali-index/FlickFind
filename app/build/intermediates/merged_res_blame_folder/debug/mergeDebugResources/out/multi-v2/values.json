@@ -21,23 +21,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "1",
-                        "startColumns": "4",
-                        "startOffsets": "17",
-                        "endColumns": "46",
-                        "endOffsets": "59"
-                    },
-                    "to": {
-                        "startLines": "122",
-                        "startColumns": "4",
-                        "startOffsets": "7699",
-                        "endColumns": "46",
-                        "endOffsets": "7741"
-                    }
-                },
-                {
                     "source": "C:\\Users\\zzzam\\.gradle\\caches\\8.9\\transforms\\e69f7fbafe600a94563a8038719e676d\\transformed\\foundation-release\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3",
@@ -55,20 +38,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\src\\main\\res\\values\\colors.xml",
+                    "source": "C:\\gifKOTLIN\\FlickFind\\app\\src\\main\\res\\values\\themes.xml",
                     "from": {
-                        "startLines": "2",
+                        "startLines": "1",
                         "startColumns": "4",
-                        "startOffsets": "57",
-                        "endColumns": "56",
-                        "endOffsets": "109"
+                        "startOffsets": "17",
+                        "endColumns": "86",
+                        "endOffsets": "99"
                     },
                     "to": {
-                        "startLines": "19",
+                        "startLines": "274",
                         "startColumns": "4",
-                        "startOffsets": "1421",
-                        "endColumns": "56",
-                        "endOffsets": "1473"
+                        "startOffsets": "19161",
+                        "endColumns": "85",
+                        "endOffsets": "19242"
                     }
                 },
                 {
@@ -178,6 +161,23 @@
                     }
                 },
                 {
+                    "source": "C:\\gifKOTLIN\\FlickFind\\app\\build\\generated\\res\\processDebugGoogleServices\\values\\values.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "55,137,241,350,470,577",
+                        "endColumns": "81,103,108,119,106,75",
+                        "endOffsets": "132,236,345,465,572,648"
+                    },
+                    "to": {
+                        "startLines": "157,158,159,160,161,227",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "11217,11299,11403,11512,11632,16408",
+                        "endColumns": "81,103,108,119,106,75",
+                        "endOffsets": "11294,11398,11507,11627,11734,16479"
+                    }
+                },
+                {
                     "source": "C:\\Users\\zzzam\\.gradle\\caches\\8.9\\transforms\\2cda8ea0d00a96f63de5c59fe3471e7e\\transformed\\ui-graphics-release\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -195,23 +195,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\src\\main\\res\\values\\themes.xml",
-                    "from": {
-                        "startLines": "1",
-                        "startColumns": "4",
-                        "startOffsets": "17",
-                        "endColumns": "86",
-                        "endOffsets": "99"
-                    },
-                    "to": {
-                        "startLines": "274",
-                        "startColumns": "4",
-                        "startOffsets": "19161",
-                        "endColumns": "85",
-                        "endOffsets": "19242"
-                    }
-                },
-                {
                     "source": "C:\\Users\\zzzam\\.gradle\\caches\\8.9\\transforms\\9a20a3f1fc16b0255b9360bccfb54c59\\transformed\\activity-1.9.3\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3",
@@ -226,6 +209,23 @@
                         "startOffsets": "5949,6958",
                         "endColumns": "41,59",
                         "endOffsets": "5986,7013"
+                    }
+                },
+                {
+                    "source": "C:\\gifKOTLIN\\FlickFind\\app\\src\\main\\res\\values\\colors.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "57",
+                        "endColumns": "56",
+                        "endOffsets": "109"
+                    },
+                    "to": {
+                        "startLines": "19",
+                        "startColumns": "4",
+                        "startOffsets": "1421",
+                        "endColumns": "56",
+                        "endOffsets": "1473"
                     }
                 },
                 {
@@ -375,20 +375,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\generated\\res\\processDebugGoogleServices\\values\\values.xml",
+                    "source": "C:\\gifKOTLIN\\FlickFind\\app\\src\\main\\res\\values\\strings.xml",
                     "from": {
-                        "startLines": "2,3,4,5,6,7",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "55,137,241,350,470,577",
-                        "endColumns": "81,103,108,119,106,75",
-                        "endOffsets": "132,236,345,465,572,648"
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "17",
+                        "endColumns": "46",
+                        "endOffsets": "59"
                     },
                     "to": {
-                        "startLines": "157,158,159,160,161,227",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "11217,11299,11403,11512,11632,16408",
-                        "endColumns": "81,103,108,119,106,75",
-                        "endOffsets": "11294,11398,11507,11627,11734,16479"
+                        "startLines": "122",
+                        "startColumns": "4",
+                        "startOffsets": "7699",
+                        "endColumns": "46",
+                        "endOffsets": "7741"
                     }
                 }
             ]

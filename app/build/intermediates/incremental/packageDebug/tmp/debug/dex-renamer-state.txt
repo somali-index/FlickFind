@@ -1,17 +1,17 @@
-#Sun May 17 22:45:12 ICT 2026
-base.0=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
-base.1=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
-base.10=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
-base.11=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes3.dex
-base.12=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes4.dex
-base.2=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\11\\classes.dex
-base.3=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\12\\classes.dex
-base.4=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\13\\classes.dex
-base.5=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex
-base.6=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\2\\classes.dex
-base.7=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\4\\classes.dex
-base.8=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\7\\classes.dex
-base.9=C\:\\Users\\zzzam\\Desktop\\cloneNhom7\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\9\\classes.dex
+#Mon May 18 06:34:21 ICT 2026
+base.0=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+base.1=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.10=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
+base.11=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes3.dex
+base.12=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes4.dex
+base.2=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\11\\classes.dex
+base.3=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\12\\classes.dex
+base.4=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\13\\classes.dex
+base.5=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex
+base.6=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\2\\classes.dex
+base.7=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\4\\classes.dex
+base.8=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\7\\classes.dex
+base.9=C\:\\gifKOTLIN\\FlickFind\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\9\\classes.dex
 path.0=classes.dex
 path.1=0/classes.dex
 path.10=classes2.dex

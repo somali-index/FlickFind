@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:2:1-23:12
-INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:2:1-23:12
-INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:2:1-23:12
-INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:2:1-23:12
+ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:2:1-23:12
 MERGED from [com.google.firebase:firebase-auth:24.1.0] C:\Users\zzzam\.gradle\caches\8.9\transforms\88b86a1f45c60f82cd2820b53f6d9e86\transformed\firebase-auth-24.1.0\AndroidManifest.xml:17:1-75:12
 MERGED from [androidx.credentials:credentials:1.2.0-rc01] C:\Users\zzzam\.gradle\caches\8.9\transforms\9473e551bd36c4b8aa4f9466cdda0582\transformed\credentials-1.2.0-rc01\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.credentials:credentials-play-services-auth:1.2.0-rc01] C:\Users\zzzam\.gradle\caches\8.9\transforms\a4493d459132dd2e7f5787a9020777d5\transformed\credentials-play-services-auth-1.2.0-rc01\AndroidManifest.xml:17:1-44:12
@@ -107,16 +107,16 @@ MERGED from [com.google.firebase:protolite-well-known-types:18.0.1] C:\Users\zzz
 MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\zzzam\.gradle\caches\8.9\transforms\247ea2138626d761c07f8035f7178b4e\transformed\grpc-android-1.62.2\AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.android.play:core-common:2.0.3] C:\Users\zzzam\.gradle\caches\8.9\transforms\d53070ee5eada5296fe9e31cd6ea102b\transformed\core-common-2.0.3\AndroidManifest.xml:2:1-21:12
 	package
-		INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml
+		INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml
+		INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml
 	android:versionCode
-		INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml
+		INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:2:11-69
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:2:11-69
 application
-ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:4:5-21:19
-INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:4:5-21:19
+ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:4:5-21:19
+INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:4:5-21:19
 MERGED from [com.google.firebase:firebase-auth:24.1.0] C:\Users\zzzam\.gradle\caches\8.9\transforms\88b86a1f45c60f82cd2820b53f6d9e86\transformed\firebase-auth-24.1.0\AndroidManifest.xml:28:5-73:19
 MERGED from [com.google.firebase:firebase-auth:24.1.0] C:\Users\zzzam\.gradle\caches\8.9\transforms\88b86a1f45c60f82cd2820b53f6d9e86\transformed\firebase-auth-24.1.0\AndroidManifest.xml:28:5-73:19
 MERGED from [androidx.credentials:credentials-play-services-auth:1.2.0-rc01] C:\Users\zzzam\.gradle\caches\8.9\transforms\a4493d459132dd2e7f5787a9020777d5\transformed\credentials-play-services-auth-1.2.0-rc01\AndroidManifest.xml:23:5-42:19
@@ -184,45 +184,45 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\zz
 MERGED from [com.google.android.play:core-common:2.0.3] C:\Users\zzzam\.gradle\caches\8.9\transforms\d53070ee5eada5296fe9e31cd6ea102b\transformed\core-common-2.0.3\AndroidManifest.xml:11:5-19:19
 MERGED from [com.google.android.play:core-common:2.0.3] C:\Users\zzzam\.gradle\caches\8.9\transforms\d53070ee5eada5296fe9e31cd6ea102b\transformed\core-common-2.0.3\AndroidManifest.xml:11:5-19:19
 	android:extractNativeLibs
-		INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml
+		INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.15.0] C:\Users\zzzam\.gradle\caches\8.9\transforms\1e9415a5a73539e82002debb93297a54\transformed\core-1.15.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:9:9-35
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:9:9-35
 	android:label
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:7:9-41
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:7:9-41
 	android:roundIcon
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:8:9-54
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:8:9-54
 	android:icon
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:6:9-43
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:6:9-43
 	android:allowBackup
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:5:9-35
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:5:9-35
 	android:theme
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:10:9-47
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:10:9-47
 activity#com.example.flickfind.MainActivity
-ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:11:9-20:20
+ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:11:9-20:20
 	android:label
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:14:13-45
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:14:13-45
 	android:exported
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:13:13-36
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:13:13-36
 	android:theme
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:15:13-51
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:15:13-51
 	android:name
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:12:13-41
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:12:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:16:13-19:29
+ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:16:13-19:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:17:17-69
+ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:17:17-69
 	android:name
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:17:25-66
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:17:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:18:17-77
+ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:18:17-77
 	android:name
-		ADDED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml:18:27-74
+		ADDED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml:18:27-74
 uses-sdk
-INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml
-INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml
+INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml
+INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml
 MERGED from [com.google.firebase:firebase-auth:24.1.0] C:\Users\zzzam\.gradle\caches\8.9\transforms\88b86a1f45c60f82cd2820b53f6d9e86\transformed\firebase-auth-24.1.0\AndroidManifest.xml:21:5-23:151
 MERGED from [com.google.firebase:firebase-auth:24.1.0] C:\Users\zzzam\.gradle\caches\8.9\transforms\88b86a1f45c60f82cd2820b53f6d9e86\transformed\firebase-auth-24.1.0\AndroidManifest.xml:21:5-23:151
 MERGED from [androidx.credentials:credentials:1.2.0-rc01] C:\Users\zzzam\.gradle\caches\8.9\transforms\9473e551bd36c4b8aa4f9466cdda0582\transformed\credentials-1.2.0-rc01\AndroidManifest.xml:5:5-44
@@ -430,9 +430,9 @@ MERGED from [com.google.android.play:core-common:2.0.3] C:\Users\zzzam\.gradle\c
 	tools:overrideLibrary
 		ADDED from [com.google.firebase:firebase-auth:24.1.0] C:\Users\zzzam\.gradle\caches\8.9\transforms\88b86a1f45c60f82cd2820b53f6d9e86\transformed\firebase-auth-24.1.0\AndroidManifest.xml:23:9-148
 	android:targetSdkVersion
-		INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml
+		INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\Users\zzzam\Desktop\cloneNhom7\FlickFind\app\src\main\AndroidManifest.xml
+		INJECTED from C:\gifKOTLIN\FlickFind\app\src\main\AndroidManifest.xml
 uses-permission#android.permission.INTERNET
 ADDED from [com.google.firebase:firebase-auth:24.1.0] C:\Users\zzzam\.gradle\caches\8.9\transforms\88b86a1f45c60f82cd2820b53f6d9e86\transformed\firebase-auth-24.1.0\AndroidManifest.xml:25:5-67
 MERGED from [com.google.firebase:firebase-firestore:26.3.0] C:\Users\zzzam\.gradle\caches\8.9\transforms\b5a2bd119c80fe9562ca05f62e52c9d5\transformed\firebase-firestore-26.3.0\AndroidManifest.xml:11:5-67
