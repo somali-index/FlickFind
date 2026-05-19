@@ -4,18 +4,20 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     id("com.google.gms.google-services")
-
     id("kotlin-kapt")
 }
 
 android {
     namespace = "com.example.flickfind"
+
+    // GIỮ SDK 35
     compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.flickfind"
         minSdk = 26
         targetSdk = 35
+
         versionCode = 1
         versionName = "1.0"
     }
@@ -25,13 +27,16 @@ android {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
@@ -39,26 +44,48 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
+    // =========================
+    // CORE
+    // =========================
 
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
+    // KHÔNG dùng version 1.18.0
+    implementation("androidx.core:core-ktx:1.13.1")
 
-    implementation(platform(libs.androidx.compose.bom))
+    // KHÔNG dùng activity 1.13.0
+    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.activity:activity-ktx:1.9.0")
 
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 
-    implementation(libs.androidx.material3)
-    implementation("com.google.firebase:firebase-firestore")
-    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.android.gms:play-services-auth:21.5.1")
+    // =========================
+    // COMPOSE
+    // =========================
+
+    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
+
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+
+    implementation("androidx.compose.material3:material3")
 
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // =========================
+    // FIREBASE
+    // =========================
+
+    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
+
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation("com.google.android.gms:play-services-auth:21.5.1")
 
     // =========================
     // ROOM
@@ -69,9 +96,12 @@ dependencies {
 
     kapt("androidx.room:room-compiler:2.6.1")
 
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    // =========================
+    // UI
+    // =========================
 
-    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.12.0")
+
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
 }

@@ -5,8 +5,9 @@ import com.example.flickfind.DATALAYER.DataClass.DataMovieClass
 import com.example.flickfind.DATALAYER.Remote.AppRemote
 import kotlin.jvm.java
 
-class Repository(private val dao: DAOMovie,private val remote: AppRemote) {
+class Repository(private val remote: AppRemote) {
     val db = remote.creatRemoteFS()
+
 
     fun getMovies(
         onResult: (List<DataMovieClass>) -> Unit

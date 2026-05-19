@@ -4,4 +4,6 @@ data class DataMovieClass(val Description: String = "",
                           val IDMovie: String = "",
                           val IDStudio: String = "",
                           val NameMovie: String = "",
-                          val URLimage: String = "")
+                          val URLimage: String = "",
+                          val TimeOneEP: String = "",
+                          val NummberEP: String = "")

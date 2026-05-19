@@ -1,5 +1,6 @@
 package com.example.flickfind.ui.auth
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
@@ -26,7 +28,9 @@ fun AuthScreen(
 
     // Tự động chuyển màn hình khi đăng nhập / đăng ký thành công
     LaunchedEffect(uiState.isSuccess) {
-        if (uiState.isSuccess) onLoginSuccess()
+        if (uiState.isSuccess) {onLoginSuccess()
+            Log.d("Login","Log  in thành công")
+        }
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -210,6 +214,8 @@ fun AuthCard(
                     ),
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    Log.d("Login","Login Error")
+
                     Text(
                         text = error,
                         color = MaterialTheme.colorScheme.onErrorContainer,
@@ -222,12 +228,15 @@ fun AuthCard(
 
             // Nút Submit
             Button(
+
                 onClick = onSubmitClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(50.dp).testTag("DNbtn"),
                 enabled = !uiState.isLoading
+
             ) {
+
                 if (uiState.isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(22.dp),

@@ -1,5 +1,6 @@
 package com.example.flickfind.ui.auth
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -81,6 +82,7 @@ class AuthViewModel : ViewModel() {
 
         val state = _uiState.value
         var isValid = true
+        Log.d("Login","Login đang được xử lý")
 
         if (state.email.isBlank()) {
 
@@ -91,6 +93,8 @@ class AuthViewModel : ViewModel() {
             }
 
             isValid = false
+            Log.d("Login","EMAIL_ADDRESS resault = ${isValid}")
+
 
         } else if (!Patterns.EMAIL_ADDRESS.matcher(state.email).matches()) {
 
@@ -101,6 +105,8 @@ class AuthViewModel : ViewModel() {
             }
 
             isValid = false
+            Log.d("Login","EMAIL_ADDRESS resault = ${isValid}")
+
         }
 
         if (state.password.isBlank()) {
@@ -112,6 +118,8 @@ class AuthViewModel : ViewModel() {
             }
 
             isValid = false
+            Log.d("Login","password resault = ${isValid}")
+
 
         } else if (state.password.length < 6) {
 
@@ -122,9 +130,13 @@ class AuthViewModel : ViewModel() {
             }
 
             isValid = false
+            Log.d("Login","password resault = ${isValid}")
+
         }
 
         return isValid
+        Log.d("Login","Login resault = ${isValid}")
+
     }
 
     private fun validateRegisterInput(): Boolean {
@@ -188,11 +200,13 @@ class AuthViewModel : ViewModel() {
         ).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
+                Log.d("Login","Mật khẩu và Email đã đúng")
 
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         isSuccess = true
+
                     )
                 }
 
