@@ -30,6 +30,7 @@ fun AuthScreen(
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {onLoginSuccess()
             Log.d("Login","Log  in thành công")
+            viewModel.resetSuccessState()
         }
     }
 
