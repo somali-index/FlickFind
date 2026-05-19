@@ -1,4 +1,4 @@
-# 🎬 FlickFind — Hướng dẫn Import vào Android Studio
+# 🎬 FlickFind 
 
 ## Cách sử dụng
 
@@ -63,8 +63,8 @@ Nhấn **Run** (▶) hoặc Shift+F10
 ### Tài khoản test mặc định:
 | Trường     | Giá trị              |
 |------------|----------------------|
-| Email      | test@flickfind.com   |
-| Mật khẩu  | 123456               |
+| Email      |abc@flickfind.com   |
+| Mật khẩu  | vinhhoanggay              |
 
 ---
 
