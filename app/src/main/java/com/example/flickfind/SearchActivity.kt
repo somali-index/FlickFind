@@ -11,6 +11,10 @@ class SearchActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(
+            "ActivitySearch",
+            "onStart: Activity Search được khởi tạo ${this.hashCode()}"
+        )
 
         enableEdgeToEdge()
 
@@ -23,7 +27,7 @@ class SearchActivity : ComponentActivity() {
         super.onStart()
 
         Log.d(
-            "Activity Search",
+            "ActivitySearch",
             "onStart: Activity Search bắt đầu hiển thị ${this.hashCode()}"
         )
     }
@@ -32,7 +36,7 @@ class SearchActivity : ComponentActivity() {
         super.onResume()
 
         Log.d(
-            "Activity Search",
+            "ActivitySearch",
             "onResume: Người dùng có thể tương tác ${this.hashCode()}"
         )
     }
@@ -41,7 +45,7 @@ class SearchActivity : ComponentActivity() {
         super.onPause()
 
         Log.d(
-            "Activity Search",
+            "ActivitySearch",
             "onPause: Activity Search tạm dừng ${this.hashCode()}"
         )
     }
@@ -50,7 +54,7 @@ class SearchActivity : ComponentActivity() {
         super.onStop()
 
         Log.d(
-            "Activity Search",
+            "ActivitySearch",
             "onStop: Activity Search không còn hiển thị ${this.hashCode()}"
         )
     }
@@ -59,8 +63,8 @@ class SearchActivity : ComponentActivity() {
         super.onDestroy()
 
         Log.d(
-            "Activity Search",
-            "Activity đã bị hủy ${this.hashCode()}"
+            "ActivitySearch",
+            "onDestroy: Activity đã bị hủy ${this.hashCode()}"
         )
     }
 }
