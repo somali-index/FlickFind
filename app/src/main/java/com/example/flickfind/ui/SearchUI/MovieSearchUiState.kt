@@ -1,6 +1,6 @@
 package com.example.flickfind.ui.SearchUI
 
-import com.example.flickfind.DATALAYER.DataClass.DataMovieClass
+import com.example.flickfind.DATALAYER.DataClass.DataMovie
 
 //data class Movie(
 //    val id: String,
@@ -12,6 +12,6 @@ import com.example.flickfind.DATALAYER.DataClass.DataMovieClass
 // Trạng thái của màn hình tìm kiếm
 data class MovieSearchUiState(
     val searchQuery: String = "",             // Chữ người dùng gõ vào ô tìm kiếm
-    val movieList: List<DataMovieClass> = emptyList(),    // Danh sách phim tìm thấy
+    val movieList: List<DataMovie> = emptyList(),    // Danh sách phim tìm thấy
     val isLoading: Boolean = false            // Trạng thái xoay xoay khi đang tìm kiếm
 )

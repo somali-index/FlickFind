@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlickFind">
         <activity
-            android:name=".SearchActivity"
+            android:name=".ui.SearchUI.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

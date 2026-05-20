@@ -1,9 +1,8 @@
 package com.example.flickfind.ui.SearchUI
 
-import android.graphics.Movie
 import androidx.lifecycle.ViewModel
 import com.example.flickfind.DATALAYER.AppRepository.Repository
-import com.example.flickfind.DATALAYER.DataClass.DataMovieClass
+import com.example.flickfind.DATALAYER.DataClass.DataMovie
 import com.example.flickfind.DATALAYER.Remote.AppRemote
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +20,7 @@ class MovieSearchViewModel : ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     // Danh sách phim giả lập (Mock Data) để test tính năng tìm kiếm
-    private var allMovies: List<DataMovieClass> = emptyList()
+    private var allMovies: List<DataMovie> = emptyList()
 
     init {
         getMovieList()
