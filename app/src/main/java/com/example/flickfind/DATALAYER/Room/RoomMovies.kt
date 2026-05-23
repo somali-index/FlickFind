@@ -12,7 +12,9 @@ data class RoomMovies(
     val NameMovie: String,
     val Description: String,
     val IDStudio: String,
-    val URLimage: String
+    val URLimage: String,
+    val TimeOneEP: String = "",
+    val NummberEP: String = ""
 )
 
 

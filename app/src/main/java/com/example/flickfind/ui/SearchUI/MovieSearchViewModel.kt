@@ -16,29 +16,23 @@ class MovieSearchViewModel : ViewModel() {
 
     // Nơi lưu trữ trạng thái bí mật trong ViewModel
     private val _uiState = MutableStateFlow(MovieSearchUiState())
-    // Nơi công khai trạng thái ra ngoài cho Giao diện (UI) hứng lấy
+
     val uiState = _uiState.asStateFlow()
 
-    // Danh sách phim giả lập (Mock Data) để test tính năng tìm kiếm
     private var allMovies: List<DataMovie> = emptyList()
 
     init {
         getMovieList()
     }
+
     private fun getMovieList() {
 
         repository.getMovies { movieList ->
 
             allMovies = movieList
 
-//            _uiState.update {
-//                it.copy(
-//                    movieList = movieList
-//                )
-//            }
         }
     }
-
 //    private val dataPhimMau = listOf(
 //        Movie("1", "One Piece Film: Red", "", "115 phút"),
 //        Movie("2", "Naruto: Trận Chiến Cuối Cùng", "", "112 phút"),
@@ -47,36 +41,35 @@ class MovieSearchViewModel : ViewModel() {
 //        Movie("5", "Conan: Tàu Ngầm Sắt Màu Đen", "", "110 phút")
 //    )
 
-    // Hàm này sẽ chạy MỖI KHI NGƯỜI DÙNG GÕ THÊM 1 KÝ TỰ vào ô tìm kiếm
-    fun onSearchQueryChange(newQuery: String) {
+        // Hàm này sẽ chạy MỖI KHI NGƯỜI DÙNG GÕ THÊM 1 KÝ TỰ vào ô tìm kiếm
+        fun onSearchQueryChange(newQuery: String) {
 
-        _uiState.update {
-            it.copy(searchQuery = newQuery)
-        }
+            _uiState.update {
+                it.copy(searchQuery = newQuery)
+            }
 
-        if (newQuery.isNotBlank()) {
+            if (newQuery.isNotBlank()) {
 
-            val danhSachPhimLocDuoc =
-                allMovies.filter { phim ->
+                val danhSachPhimLocDuoc =
+                    allMovies.filter { phim ->
 
-                    phim.NameMovie.contains(
-                        newQuery,
-                        ignoreCase = true
+                        phim.NameMovie.contains(
+                            newQuery,
+                            ignoreCase = true
+                        )
+                    }
+
+                _uiState.update {
+                    it.copy(
+                        movieList = danhSachPhimLocDuoc
                     )
                 }
 
-            _uiState.update {
-                it.copy(
-                    movieList = danhSachPhimLocDuoc
-                )
+            } else {
+
+                _uiState.update { it.copy(movieList = emptyList()) }
+
             }
-
-        } else {
-
-            // Hiện lại toàn bộ phim
-            _uiState.update { it.copy(movieList = emptyList()) }
-
         }
     }
-}
 
