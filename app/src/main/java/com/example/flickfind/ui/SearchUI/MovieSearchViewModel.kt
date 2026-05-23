@@ -14,9 +14,7 @@ class MovieSearchViewModel : ViewModel() {
         remote = AppRemote()
     )
 
-    // Nơi lưu trữ trạng thái bí mật trong ViewModel
     private val _uiState = MutableStateFlow(MovieSearchUiState())
-
     val uiState = _uiState.asStateFlow()
 
     private var allMovies: List<DataMovie> = emptyList()
@@ -26,50 +24,25 @@ class MovieSearchViewModel : ViewModel() {
     }
 
     private fun getMovieList() {
-
         repository.getMovies { movieList ->
-
             allMovies = movieList
-
         }
     }
-//    private val dataPhimMau = listOf(
-//        Movie("1", "One Piece Film: Red", "", "115 phút"),
-//        Movie("2", "Naruto: Trận Chiến Cuối Cùng", "", "112 phút"),
-//        Movie("3", "Dragon Ball Super: Broly", "", "100 phút"),
-//        Movie("4", "Doraemon: Nobita và Vùng Đất Lý Tưởng", "", "107 phút"),
-//        Movie("5", "Conan: Tàu Ngầm Sắt Màu Đen", "", "110 phút")
-//    )
 
-        // Hàm này sẽ chạy MỖI KHI NGƯỜI DÙNG GÕ THÊM 1 KÝ TỰ vào ô tìm kiếm
-        fun onSearchQueryChange(newQuery: String) {
+    fun onSearchQueryChange(newQuery: String) {
+        _uiState.update {
+            it.copy(searchQuery = newQuery)
+        }
 
+        if (newQuery.isNotBlank()) {
+            val danhSachPhimLocDuoc = allMovies.filter { phim ->
+                phim.NameMovie.contains(newQuery, ignoreCase = true)
+            }
             _uiState.update {
-                it.copy(searchQuery = newQuery)
+                it.copy(movieList = danhSachPhimLocDuoc)
             }
-
-            if (newQuery.isNotBlank()) {
-
-                val danhSachPhimLocDuoc =
-                    allMovies.filter { phim ->
-
-                        phim.NameMovie.contains(
-                            newQuery,
-                            ignoreCase = true
-                        )
-                    }
-
-                _uiState.update {
-                    it.copy(
-                        movieList = danhSachPhimLocDuoc
-                    )
-                }
-
-            } else {
-
-                _uiState.update { it.copy(movieList = emptyList()) }
-
-            }
+        } else {
+            _uiState.update { it.copy(movieList = emptyList()) }
         }
     }
-
+}

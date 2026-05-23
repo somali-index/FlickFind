@@ -15,7 +15,6 @@ import com.example.flickfind.ui.Navigation.AuthRoute
 import com.example.flickfind.ui.Navigation.HomeRoute
 import com.example.flickfind.ui.auth.AuthScreen
 import com.example.flickfind.ui.home.HomeScree
-import com.example.flickfind.ui.home.HomeScree
 import com.example.flickfind.ui.theme.FlickFindTheme
 import com.google.firebase.auth.FirebaseAuth
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -28,43 +29,40 @@ import com.example.flickfind.DATALAYER.DataClass.DataMovie
 import com.example.flickfind.DATALAYER.DataClass.ListMovieDataSource
 import com.example.flickfind.DATALAYER.Remote.AppRemote
 import com.example.flickfind.ui.SearchUI.SearchActivity
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Divider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScree(
     onLogout: () -> Unit,
-
+    onProfileClick: () -> Unit = {},  // Thêm callback cho profile
+    onSettingsClick: () -> Unit = {},  // Thêm callback cho settings
     viewModel: HomeViewModel = viewModel()
 ) {
-
     val context = LocalContext.current
 
-    // LẤY STATE TỪ VIEWMODEL
-    val uiState by
-    viewModel.homeUiState.collectAsState()
+    // State cho dropdown menu
+    var showMenu by remember { mutableStateOf(false) }
+
+    val uiState by viewModel.homeUiState.collectAsState()
 
     Scaffold(
-
         topBar = {
-
             TopAppBar(
-
                 title = {
-
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-
                         Icon(
                             imageVector = Icons.Default.Movie,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary
                         )
-
-                        Spacer(
-                            modifier = Modifier.width(8.dp)
-                        )
-
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "FlickFind",
                             fontWeight = FontWeight.Bold,
@@ -72,36 +70,73 @@ fun HomeScree(
                         )
                     }
                 },
-
                 actions = {
-
                     // SEARCH
                     IconButton(
-
                         onClick = {
-
                             context.startActivity(
-
-                                Intent(
-                                    context,
-                                    SearchActivity::class.java
-                                )
+                                Intent(context, SearchActivity::class.java)
                             )
                         }
                     ) {
-
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = "Search"
                         )
                     }
 
-                    // LOGOUT
-                    TextButton(
-                        onClick = onLogout
-                    ) {
+                    // MENU DROPDOWN
+                    Box {
+                        IconButton(
+                            onClick = { showMenu = true }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Person, // Hoặc Icons.Default.MoreVert
+                                contentDescription = "Menu",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
 
-                        Text("Đăng xuất")
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            // Thông tin cá nhân
+                            DropdownMenuItem(
+                                text = { Text("👤 Thông tin cá nhân") },
+                                onClick = {
+                                    showMenu = false
+                                    onProfileClick()
+                                    // Hoặc navigate đến màn hình profile
+                                }
+                            )
+
+                            // Cài đặt
+                            DropdownMenuItem(
+                                text = { Text("⚙️ Cài đặt") },
+                                onClick = {
+                                    showMenu = false
+                                    onSettingsClick()
+                                    // Hoặc navigate đến màn hình settings
+                                }
+                            )
+
+
+
+                            // Đăng xuất
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        "🚪 Đăng xuất",
+                                        color = Color.Red
+                                    )
+                                },
+                                onClick = {
+                                    showMenu = false
+                                    onLogout()
+                                }
+                            )
+                        }
                     }
                 }
             )
