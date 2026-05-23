@@ -121,7 +121,7 @@ fun HomeScree(
                                 }
                             )
 
-                            Divider()
+
 
                             // Đăng xuất
                             DropdownMenuItem(
