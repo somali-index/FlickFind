@@ -7,8 +7,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.flickfind.DATALAYER.Remote.AppRemote
+import com.example.flickfind.ui.Navigation.AuthRoute
+import com.example.flickfind.ui.Navigation.HomeRoute
 import com.example.flickfind.ui.auth.AuthScreen
-import com.example.flickfind.ui.home.HomeScree
 import com.example.flickfind.ui.home.HomeScree
 import com.example.flickfind.ui.theme.FlickFindTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -71,29 +76,43 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun FlickFindApp() {
+    val navController = rememberNavController()
+    val remote = AppRemote()
+    var auth = remote.creatFirebaseAuth()
 
-    var isLoggedIn by remember {
-        mutableStateOf(
-            FirebaseAuth.getInstance().currentUser != null
-        )
+    // Kiểm tra trạng thái đăng nhập để chọn màn hình khởi đầu
+    val startDestination = if (auth.currentUser != null) {
+        HomeRoute
+    } else {
+        AuthRoute
     }
 
-    if (isLoggedIn) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination
+    ) {
+        // 1. Luồng Auth
+        composable<AuthRoute> {
+            AuthScreen(
+                onLoginSuccess = {
+                    // Xóa màn hình Auth khỏi stack để không bị quay lại khi nhấn Back
+                    navController.navigate(HomeRoute) {
+                        popUpTo(AuthRoute) { inclusive = true }
+                    }
+                }
+            )
+        }
 
-        HomeScree(
-            onLogout = {
-
-                FirebaseAuth.getInstance().signOut()
-                isLoggedIn = false
-            }
-        )
-
-    } else {
-
-        AuthScreen(
-            onLoginSuccess = {
-                isLoggedIn = true
-            }
-        )
+        // 2. Luồng Home
+        composable<HomeRoute> {
+            HomeScree(
+                onLogout = {
+                    auth.signOut()
+                    navController.navigate(AuthRoute) {
+                        popUpTo(HomeRoute) { inclusive = true }
+                    }
+                }
+            )
+        }
     }
 }
