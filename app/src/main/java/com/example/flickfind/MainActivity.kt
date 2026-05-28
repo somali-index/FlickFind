@@ -13,10 +13,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.flickfind.DATALAYER.Remote.AppRemote
 import com.example.flickfind.ui.Navigation.AuthRoute
 import com.example.flickfind.ui.Navigation.HomeRoute
+import com.example.flickfind.ui.Navigation.ProfileRoute
 import com.example.flickfind.ui.auth.AuthScreen
 import com.example.flickfind.ui.home.HomeScree
 import com.example.flickfind.ui.theme.FlickFindTheme
 import com.google.firebase.auth.FirebaseAuth
+import com.example.flickfind.ui.profile.ProfileScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +88,10 @@ fun FlickFindApp() {
     } else {
         AuthRoute
     }
+    var currentScreen by remember {
+
+        mutableStateOf("home")
+    }
 
     NavHost(
         navController = navController,
@@ -111,6 +117,18 @@ fun FlickFindApp() {
                     navController.navigate(AuthRoute) {
                         popUpTo(HomeRoute) { inclusive = true }
                     }
+                },
+                onProfileClick = {
+                    navController.navigate(ProfileRoute)
+                }
+            )
+        }
+
+        // 3. Luồng Profile
+        composable<ProfileRoute> {
+            ProfileScreen(
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }
