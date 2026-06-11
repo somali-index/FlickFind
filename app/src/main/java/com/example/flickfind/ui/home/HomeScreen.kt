@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,10 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.flickfind.DATALAYER.DataClass.DataMovie
 import com.example.flickfind.ui.SearchUI.SearchActivity
+import com.example.flickfind.ui.theme.FlickFindTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScree(
     onLogout: () -> Unit,
@@ -37,8 +37,29 @@ fun HomeScree(
     viewModel: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    var showMenu by remember { mutableStateOf(false) }
     val uiState by viewModel.homeUiState.collectAsState()
+
+    HomeScreeContent(
+        uiState = uiState,
+        onLogout = onLogout,
+        onProfileClick = onProfileClick,
+        onSettingsClick = onSettingsClick,
+        onSearchClick = {
+            context.startActivity(Intent(context, SearchActivity::class.java))
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScreeContent(
+    uiState: HomeUiState,
+    onLogout: () -> Unit,
+    onProfileClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onSearchClick: () -> Unit
+) {
+    var showMenu by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -59,9 +80,7 @@ fun HomeScree(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        context.startActivity(Intent(context, SearchActivity::class.java))
-                    }) {
+                    IconButton(onClick = onSearchClick) {
                         Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
                     }
 
@@ -83,13 +102,6 @@ fun HomeScree(
                                 onClick = {
                                     showMenu = false
                                     onProfileClick()
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("⚙️ Cài đặt") },
-                                onClick = {
-                                    showMenu = false
-                                    onSettingsClick()
                                 }
                             )
                             HorizontalDivider()
@@ -165,5 +177,57 @@ fun MovieCard(movie: DataMovie) {
         Spacer(modifier = Modifier.height(6.dp))
         Text(text = movie.NameMovie, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium, maxLines = 2, overflow = TextOverflow.Ellipsis)
         Text(text = movie.Description, color = Color.Gray, fontSize = 11.sp, maxLines = 1)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreePreview() {
+    FlickFindTheme {
+        HomeScreeContent(
+            uiState = HomeUiState(
+                movieList = listOf(
+                    DataMovie(NameMovie = "Phim 1", Description = "Mô tả phim 1"),
+                    DataMovie(NameMovie = "Phim 2", Description = "Mô tả phim 2")
+                ),
+                isLoading = false
+            ),
+            onLogout = {},
+            onProfileClick = {},
+            onSettingsClick = {},
+            onSearchClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeHeaderPreview() {
+    FlickFindTheme {
+        HomeHeader()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MovieSectionPreview() {
+    FlickFindTheme {
+        MovieSection(
+            title = "🎬 Danh sách phim",
+            movies = listOf(
+                DataMovie(NameMovie = "Phim 1", Description = "Mô tả phim 1"),
+                DataMovie(NameMovie = "Phim 2", Description = "Mô tả phim 2")
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MovieCardPreview() {
+    FlickFindTheme {
+        MovieCard(
+            movie = DataMovie(NameMovie = "Phim 1", Description = "Mô tả phim 1")
+        )
     }
 }
