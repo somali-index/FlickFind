@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.flickfind.ui.theme.FlickFindTheme
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
@@ -26,6 +29,18 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    ProfileContent(
+        uiState = uiState,
+        onBack = onBack
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProfileContent(
+    uiState: ProfileUiState,
+    onBack: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -76,5 +91,20 @@ fun ProfileScreen(
                 fontSize = 16.sp
             )
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ProfileScreenPreview() {
+    FlickFindTheme {
+        ProfileContent(
+            uiState = ProfileUiState(
+                name = "Người Dùng Mẫu",
+                email = "sample@example.com",
+                avatar = "https://i.pravatar.cc/300"
+            ),
+            onBack = {}
+        )
     }
 }

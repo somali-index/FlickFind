@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.BookmarkAdd
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -116,8 +118,20 @@ fun HomeScree(
                 contentPadding = PaddingValues(bottom = 24.dp)
             ) {
                 item { HomeHeader() }
-                item { MovieSection(title = "🎬 Danh sách phim", movies = uiState.movieList) }
-                item { MovieSection(title = "🎬 Phim hot", movies = uiState.movieList) }
+                item { 
+                    MovieSection(
+                        title = "🎬 Danh sách phim", 
+                        movies = uiState.movieList,
+                        onSaveClick = { movie -> viewModel.saveMovie(movie) }
+                    ) 
+                }
+                item { 
+                    MovieSection(
+                        title = "🎬 Phim hot", 
+                        movies = uiState.movieList,
+                        onSaveClick = { movie -> viewModel.saveMovie(movie) }
+                    ) 
+                }
             }
         }
     }
@@ -132,7 +146,7 @@ fun HomeHeader() {
 }
 
 @Composable
-fun MovieSection(title: String, movies: List<DataMovie>) {
+fun MovieSection(title: String, movies: List<DataMovie>, onSaveClick: (DataMovie) -> Unit) {
     Column(modifier = Modifier.padding(top = 20.dp)) {
         Text(
             text = title,
@@ -142,25 +156,46 @@ fun MovieSection(title: String, movies: List<DataMovie>) {
             modifier = Modifier.padding(start = 16.dp, bottom = 12.dp)
         )
         LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(movies) { movie -> MovieCard(movie) }
+            items(movies) { movie -> 
+                MovieCard(movie = movie, onSaveClick = { onSaveClick(movie) }) 
+            }
         }
     }
 }
 
 @Composable
-fun MovieCard(movie: DataMovie) {
+fun MovieCard(movie: DataMovie, onSaveClick: () -> Unit) {
     Column(modifier = Modifier.width(120.dp)) {
-        Card(
-            shape = RoundedCornerShape(10.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            modifier = Modifier.width(120.dp).height(180.dp)
-        ) {
-            AsyncImage(
-                model = movie.URLimage,
-                contentDescription = movie.NameMovie,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+        Box {
+            Card(
+                shape = RoundedCornerShape(10.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                modifier = Modifier.width(120.dp).height(180.dp)
+            ) {
+                AsyncImage(
+                    model = movie.URLimage,
+                    contentDescription = movie.NameMovie,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            
+            // Nút Lưu phim
+            IconButton(
+                onClick = onSaveClick,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(4.dp)
+                    .size(32.dp)
+                    .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.BookmarkAdd,
+                    contentDescription = "Save Movie",
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
         }
         Spacer(modifier = Modifier.height(6.dp))
         Text(text = movie.NameMovie, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium, maxLines = 2, overflow = TextOverflow.Ellipsis)

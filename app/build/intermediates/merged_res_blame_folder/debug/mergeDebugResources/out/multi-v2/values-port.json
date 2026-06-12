@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.flickfind.app-mergeDebugResources-90:/values-port/values-port.xml",
+            "outputFile": "com.example.flickfind.app-mergeDebugResources-80:/values-port/values-port.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\hoang\\.gradle\\caches\\8.9\\transforms\\e6f9f9884fbe4a67f1abbc634d9d5f76\\transformed\\appcompat-1.7.0\\res\\values-port\\values-port.xml",
+                    "source": "C:\\Users\\zzzam\\.gradle\\caches\\9.3.1\\transforms\\d3fff63512b9c9931a2a7cc2a899b2bf\\workspace\\transformed\\appcompat-1.7.0\\res\\values-port\\values-port.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

@@ -1,18 +1,16 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
     id("com.google.gms.google-services")
-    id("kotlin-kapt")
-    kotlin("plugin.serialization") version "2.0.21"
-
+    id("com.google.devtools.ksp") version "2.2.10-2.0.2"
+    kotlin("plugin.serialization") version "2.2.10"
 }
 
 android {
     namespace = "com.example.flickfind"
-
-    // GIỮ SDK 35
     compileSdk = 35
 
     defaultConfig {
@@ -46,24 +44,16 @@ android {
 
 dependencies {
 
-    // =========================
     // CORE
-    // =========================
-
-    // KHÔNG dùng version 1.18.0
     implementation("androidx.core:core-ktx:1.13.1")
 
-    // KHÔNG dùng activity 1.13.0
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.activity:activity-ktx:1.9.0")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 
-    // =========================
     // COMPOSE
-    // =========================
-
     implementation(platform("androidx.compose:compose-bom:2024.09.00"))
 
     implementation("androidx.compose.ui:ui")
@@ -71,16 +61,12 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
 
     implementation("androidx.compose.material3:material3")
-
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // =========================
     // FIREBASE
-    // =========================
-
     implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
 
     implementation("com.google.firebase:firebase-auth")
@@ -89,44 +75,22 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-auth:21.5.1")
 
-    // =========================
     // ROOM
-    // =========================
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-
-    kapt("androidx.room:room-compiler:2.6.1")
-
-    // =========================
     // UI
-    // =========================
-
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
-
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
 
-    //coil//
+    // COIL
     implementation("io.coil-kt:coil-compose:2.7.0")
-    //NAV//
-    val nav_version = "2.9.8"
 
-    // Jetpack Compose integration
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    // NAVIGATION COMPOSE
+    implementation("androidx.navigation:navigation-compose:2.9.8")
 
-    // Views/Fragments integration
-    implementation("androidx.navigation:navigation-fragment:$nav_version")
-    implementation("androidx.navigation:navigation-ui:$nav_version")
-
-    // Feature module support for Fragments
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
-
-    // Testing Navigation
-    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
-
-    // JSON serialization library, works with the Kotlin serialization plugin
+    // SERIALIZATION
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-
-
 }

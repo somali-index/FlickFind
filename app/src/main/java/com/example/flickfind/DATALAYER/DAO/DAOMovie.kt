@@ -1,14 +1,34 @@
 package com.example.flickfind.DATALAYER.DAO
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.example.flickfind.DATALAYER.Room.RoomMovies
+import androidx.room.*
+import com.example.flickfind.DATALAYER.Room.*
+
+// Lớp bao gói để lấy Phim kèm danh sách Thể loại
+data class MovieWithGenres(
+    @Embedded val movie: RoomMovies,
+    @Relation(
+        parentColumn = "IDMovie",
+        entityColumn = "GenreID",
+        associateBy = Junction(MovieGenreCrossRef::class)
+    )
+    val genres: List<RoomGenre>
+)
+
+// Lớp bao gói để lấy Phim kèm danh sách Studio
+data class MovieWithStudios(
+    @Embedded val movie: RoomMovies,
+    @Relation(
+        parentColumn = "IDMovie",
+        entityColumn = "IDStudio",
+        associateBy = Junction(MovieStudioCrossRef::class)
+    )
+    val studios: List<RoomStudio>
+)
 
 @Dao
 interface DAOMovie {
 
+    // --- CÁC HÀM CHO PHIM ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie: RoomMovies)
 
@@ -18,9 +38,33 @@ interface DAOMovie {
     @Query("SELECT * FROM movieData")
     suspend fun getAllMovies(): List<RoomMovies>
 
+    // --- CÁC HÀM CHO THỂ LOẠI & STUDIO ---
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGenres(genres: List<RoomGenre>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStudios(studios: List<RoomStudio>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMovieGenreCrossRef(crossRef: MovieGenreCrossRef)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMovieStudioCrossRef(crossRef: MovieStudioCrossRef)
+
+    // --- TRUY VẤN QUAN HỆ ---
+    @Transaction
+    @Query("SELECT * FROM movieData")
+    suspend fun getMoviesWithGenres(): List<MovieWithGenres>
+
+    @Transaction
+    @Query("SELECT * FROM movieData WHERE IDMovie = :movieId")
+    suspend fun getMovieWithGenresById(movieId: String): MovieWithGenres?
+
+    @Transaction
+    @Query("SELECT * FROM movieData")
+    suspend fun getMoviesWithStudios(): List<MovieWithStudios>
+
+    // --- XÓA DỮ LIỆU ---
     @Query("DELETE FROM movieData")
     suspend fun clearAll()
-
-
 }
-

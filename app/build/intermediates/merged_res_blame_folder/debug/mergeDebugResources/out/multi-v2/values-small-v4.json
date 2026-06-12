@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.flickfind.app-mergeDebugResources-90:/values-small-v4/values-small-v4.xml",
+            "outputFile": "com.example.flickfind.app-mergeDebugResources-80:/values-small-v4/values-small-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\hoang\\.gradle\\caches\\8.9\\transforms\\9aeb3aaf1f59abbb067cff5079f2373f\\transformed\\material-1.12.0\\res\\values-small-v4\\values-small-v4.xml",
+                    "source": "C:\\Users\\zzzam\\.gradle\\caches\\9.3.1\\transforms\\ded5fd956f116a278762b6daaf188caf\\workspace\\transformed\\material-1.12.0\\res\\values-small-v4\\values-small-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",

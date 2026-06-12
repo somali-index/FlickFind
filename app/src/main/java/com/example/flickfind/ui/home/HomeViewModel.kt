@@ -14,10 +14,11 @@ data class HomeUiState(
     val isLoading: Boolean = true
 )
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: android.app.Application) : androidx.lifecycle.AndroidViewModel(application) {
 
     private val repository = Repository(
-        remote = AppRemote()
+        remote = AppRemote(),
+        movieDao = com.example.flickfind.DATALAYER.Room.AppDatabase.getDatabase(application).movieDao()
     )
 
     // STATE
@@ -32,8 +33,11 @@ class HomeViewModel : ViewModel() {
             List<DataMovie> = emptyList()
 
     init {
-
         getMovieListHome()
+    }
+
+    fun saveMovie(movie: DataMovie) {
+        repository.saveMovieToLocal(movie)
     }
 
     private fun getMovieListHome() {
