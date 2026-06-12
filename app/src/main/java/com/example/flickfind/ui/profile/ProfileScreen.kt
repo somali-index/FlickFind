@@ -34,13 +34,17 @@ import com.example.flickfind.ui.theme.FlickFindTheme
 @Composable
 fun ProfileScreen(
     onBack: () -> Unit,
+    onSavedMoviesClick: () -> Unit,
+    onUnderDevelopmentClick: () -> Unit,
     viewModel: ProfileViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     ProfileScreenContent(
         uiState = uiState,
-        onBack = onBack
+        onBack = onBack,
+        onSavedMoviesClick = onSavedMoviesClick,
+        onUnderDevelopmentClick = onUnderDevelopmentClick
     )
 }
 
@@ -48,7 +52,9 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenContent(
     uiState: ProfileUiState,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onSavedMoviesClick: () -> Unit,
+    onUnderDevelopmentClick: () -> Unit
 ) {
     Scaffold(
         containerColor = Color(0xFF0F0F0F),
@@ -172,19 +178,22 @@ fun ProfileScreenContent(
                         modifier = Modifier.weight(1f),
                         icon = Icons.Default.Bookmark,
                         title = "Phim Đã Lưu",
-                        count = uiState.savedMoviesCount.toString()
+                        count = uiState.savedMoviesCount.toString(),
+                        onClick = onSavedMoviesClick
                     )
                     StatCard(
                         modifier = Modifier.weight(1f),
                         icon = Icons.Default.PlayCircle,
                         title = "Phim Đã Xem",
-                        count = uiState.watchedMoviesCount.toString()
+                        count = uiState.watchedMoviesCount.toString(),
+                        onClick = onUnderDevelopmentClick
                     )
                     StatCard(
                         modifier = Modifier.weight(1f),
                         icon = Icons.Default.LibraryMusic,
                         title = "Bộ Sưu Tập",
-                        count = uiState.collectionsCount.toString()
+                        count = uiState.collectionsCount.toString(),
+                        onClick = onUnderDevelopmentClick
                     )
                 }
 
@@ -197,20 +206,20 @@ fun ProfileScreenContent(
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color(0xFF1A1A1A))
                 ) {
-                    MenuItem(icon = Icons.Default.Person, title = "Quản Lý Cá Nhân")
-                    MenuItem(icon = Icons.Default.Favorite, title = "Thể Loại Yêu Thích")
-                    MenuItem(icon = Icons.Default.History, title = "Lịch Sử Tìm Kiếm")
-                    MenuItem(icon = Icons.Default.CheckCircle, title = "Danh Sách Theo Dõi")
-                    MenuItem(icon = Icons.Default.Settings, title = "Cài Đặt Ứng Dụng")
-                    MenuItem(icon = Icons.Default.Notifications, title = "Thông Báo")
-                    MenuItem(icon = Icons.AutoMirrored.Filled.Chat, title = "Hỗ Trợ & Phản Hồi", showDivider = false)
+                    MenuItem(icon = Icons.Default.Person, title = "Quản Lý Cá Nhân", onClick = onUnderDevelopmentClick)
+                    MenuItem(icon = Icons.Default.Favorite, title = "Thể Loại Yêu Thích", onClick = onUnderDevelopmentClick)
+                    MenuItem(icon = Icons.Default.History, title = "Lịch Sử Tìm Kiếm", onClick = onUnderDevelopmentClick)
+                    MenuItem(icon = Icons.Default.CheckCircle, title = "Danh Sách Theo Dõi", onClick = onUnderDevelopmentClick)
+                    MenuItem(icon = Icons.Default.Settings, title = "Cài Đặt Ứng Dụng", onClick = onUnderDevelopmentClick)
+                    MenuItem(icon = Icons.Default.Notifications, title = "Thông Báo", onClick = onUnderDevelopmentClick)
+                    MenuItem(icon = Icons.AutoMirrored.Filled.Chat, title = "Hỗ Trợ & Phản Hồi", showDivider = false, onClick = onUnderDevelopmentClick)
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Logout Button
                 Button(
-                    onClick = { /* TODO */ },
+                    onClick = onUnderDevelopmentClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
@@ -244,10 +253,13 @@ fun StatCard(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     title: String,
-    count: String
+    count: String,
+    onClick: () -> Unit = {}
 ) {
     Surface(
-        modifier = modifier,
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { onClick() },
         color = Color(0xFF1A1A1A),
         shape = RoundedCornerShape(12.dp)
     ) {
@@ -327,7 +339,9 @@ fun ProfileScreenPreview() {
     FlickFindTheme {
         ProfileScreenContent(
             uiState = ProfileUiState(),
-            onBack = {}
+            onBack = {},
+            onSavedMoviesClick = {},
+            onUnderDevelopmentClick = {}
         )
     }
 }

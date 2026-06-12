@@ -36,7 +36,13 @@ interface DAOMovie {
     suspend fun insertMovies(list: List<RoomMovies>)
 
     @Query("SELECT * FROM movieData")
+    fun getAllMoviesFlow(): kotlinx.coroutines.flow.Flow<List<RoomMovies>>
+
+    @Query("SELECT * FROM movieData")
     suspend fun getAllMovies(): List<RoomMovies>
+
+    @Delete
+    suspend fun deleteMovie(movie: RoomMovies)
 
     // --- CÁC HÀM CHO THỂ LOẠI & STUDIO ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -1,8 +1,10 @@
 package com.example.flickfind.DATALAYER.DAO
 
 import androidx.collection.ArrayMap
+import androidx.room.EntityDeleteOrUpdateAdapter
 import androidx.room.EntityInsertAdapter
 import androidx.room.RoomDatabase
+import androidx.room.coroutines.createFlow
 import androidx.room.util.appendPlaceholders
 import androidx.room.util.getColumnIndexOrThrow
 import androidx.room.util.performSuspending
@@ -25,6 +27,7 @@ import kotlin.collections.Set
 import kotlin.collections.mutableListOf
 import kotlin.reflect.KClass
 import kotlin.text.StringBuilder
+import kotlinx.coroutines.flow.Flow
 
 @Generated(value = ["androidx.room.RoomProcessor"])
 @Suppress(names = ["UNCHECKED_CAST", "DEPRECATION", "REDUNDANT_PROJECTION", "REMOVAL"])
@@ -42,6 +45,8 @@ public class DAOMovie_Impl(
   private val __insertAdapterOfMovieGenreCrossRef: EntityInsertAdapter<MovieGenreCrossRef>
 
   private val __insertAdapterOfMovieStudioCrossRef: EntityInsertAdapter<MovieStudioCrossRef>
+
+  private val __deleteAdapterOfRoomMovies: EntityDeleteOrUpdateAdapter<RoomMovies>
   init {
     this.__db = __db
     this.__insertAdapterOfRoomMovies = object : EntityInsertAdapter<RoomMovies>() {
@@ -96,6 +101,13 @@ public class DAOMovie_Impl(
         statement.bindText(2, entity.IDMovie)
       }
     }
+    this.__deleteAdapterOfRoomMovies = object : EntityDeleteOrUpdateAdapter<RoomMovies>() {
+      protected override fun createQuery(): String = "DELETE FROM `movieData` WHERE `IDMovie` = ?"
+
+      protected override fun bind(statement: SQLiteStatement, entity: RoomMovies) {
+        statement.bindText(1, entity.IDMovie)
+      }
+    }
   }
 
   public override suspend fun insertMovie(movie: RoomMovies): Unit = performSuspending(__db, false,
@@ -126,6 +138,51 @@ public class DAOMovie_Impl(
   public override suspend fun insertMovieStudioCrossRef(crossRef: MovieStudioCrossRef): Unit =
       performSuspending(__db, false, true) { _connection ->
     __insertAdapterOfMovieStudioCrossRef.insert(_connection, crossRef)
+  }
+
+  public override suspend fun deleteMovie(movie: RoomMovies): Unit = performSuspending(__db, false,
+      true) { _connection ->
+    __deleteAdapterOfRoomMovies.handle(_connection, movie)
+  }
+
+  public override fun getAllMoviesFlow(): Flow<List<RoomMovies>> {
+    val _sql: String = "SELECT * FROM movieData"
+    return createFlow(__db, false, arrayOf("movieData")) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
+      try {
+        val _cursorIndexOfIDMovie: Int = getColumnIndexOrThrow(_stmt, "IDMovie")
+        val _cursorIndexOfNameMovie: Int = getColumnIndexOrThrow(_stmt, "NameMovie")
+        val _cursorIndexOfDescription: Int = getColumnIndexOrThrow(_stmt, "Description")
+        val _cursorIndexOfIDStudio: Int = getColumnIndexOrThrow(_stmt, "IDStudio")
+        val _cursorIndexOfURLimage: Int = getColumnIndexOrThrow(_stmt, "URLimage")
+        val _cursorIndexOfTimeOneEP: Int = getColumnIndexOrThrow(_stmt, "TimeOneEP")
+        val _cursorIndexOfNummberEP: Int = getColumnIndexOrThrow(_stmt, "NummberEP")
+        val _result: MutableList<RoomMovies> = mutableListOf()
+        while (_stmt.step()) {
+          val _item: RoomMovies
+          val _tmpIDMovie: String
+          _tmpIDMovie = _stmt.getText(_cursorIndexOfIDMovie)
+          val _tmpNameMovie: String
+          _tmpNameMovie = _stmt.getText(_cursorIndexOfNameMovie)
+          val _tmpDescription: String
+          _tmpDescription = _stmt.getText(_cursorIndexOfDescription)
+          val _tmpIDStudio: String
+          _tmpIDStudio = _stmt.getText(_cursorIndexOfIDStudio)
+          val _tmpURLimage: String
+          _tmpURLimage = _stmt.getText(_cursorIndexOfURLimage)
+          val _tmpTimeOneEP: String
+          _tmpTimeOneEP = _stmt.getText(_cursorIndexOfTimeOneEP)
+          val _tmpNummberEP: String
+          _tmpNummberEP = _stmt.getText(_cursorIndexOfNummberEP)
+          _item =
+              RoomMovies(_tmpIDMovie,_tmpNameMovie,_tmpDescription,_tmpIDStudio,_tmpURLimage,_tmpTimeOneEP,_tmpNummberEP)
+          _result.add(_item)
+        }
+        _result
+      } finally {
+        _stmt.close()
+      }
+    }
   }
 
   public override suspend fun getAllMovies(): List<RoomMovies> {

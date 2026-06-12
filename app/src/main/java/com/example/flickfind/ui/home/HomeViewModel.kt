@@ -8,10 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 data class HomeUiState(
-
     val movieList: List<DataMovie> = emptyList(),
-
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val userMessage: String? = null
 )
 
 class HomeViewModel(application: android.app.Application) : androidx.lifecycle.AndroidViewModel(application) {
@@ -38,6 +37,11 @@ class HomeViewModel(application: android.app.Application) : androidx.lifecycle.A
 
     fun saveMovie(movie: DataMovie) {
         repository.saveMovieToLocal(movie)
+        _homeUiState.value = _homeUiState.value.copy(userMessage = "Đã thêm '${movie.NameMovie}' vào danh sách đã lưu")
+    }
+
+    fun clearMessage() {
+        _homeUiState.value = _homeUiState.value.copy(userMessage = null)
     }
 
     private fun getMovieListHome() {

@@ -14,11 +14,16 @@ import com.example.flickfind.DATALAYER.Remote.AppRemote
 import com.example.flickfind.ui.Navigation.AuthRoute
 import com.example.flickfind.ui.Navigation.HomeRoute
 import com.example.flickfind.ui.Navigation.ProfileRoute
+import com.example.flickfind.ui.Navigation.SavedMoviesRoute
+import com.example.flickfind.ui.Navigation.MovieDetailRoute
 import com.example.flickfind.ui.auth.AuthScreen
 import com.example.flickfind.ui.home.HomeScree
 import com.example.flickfind.ui.theme.FlickFindTheme
 import com.google.firebase.auth.FirebaseAuth
+import com.example.flickfind.ui.Navigation.UnderDevelopmentRoute
+import com.example.flickfind.ui.common.UnderDevelopmentScreen
 import com.example.flickfind.ui.profile.ProfileScreen
+import com.example.flickfind.ui.profile.SavedMoviesScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,6 +125,9 @@ fun FlickFindApp() {
                 },
                 onProfileClick = {
                     navController.navigate(ProfileRoute)
+                },
+                onMovieClick = {
+                    navController.navigate(UnderDevelopmentRoute)
                 }
             )
         }
@@ -127,6 +135,34 @@ fun FlickFindApp() {
         // 3. Luồng Profile
         composable<ProfileRoute> {
             ProfileScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onSavedMoviesClick = {
+                    Log.d("NAVIGATION", "Navigating to SavedMoviesRoute")
+                    navController.navigate(SavedMoviesRoute)
+                },
+                onUnderDevelopmentClick = {
+                    navController.navigate(UnderDevelopmentRoute)
+                }
+            )
+        }
+
+        // 4. Phim đã lưu
+        composable<SavedMoviesRoute> {
+            SavedMoviesScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onMovieClick = { _ ->
+                    navController.navigate(UnderDevelopmentRoute)
+                }
+            )
+        }
+
+        // 5. Tính năng đang phát triển
+        composable<UnderDevelopmentRoute> {
+            UnderDevelopmentScreen(
                 onBack = {
                     navController.popBackStack()
                 }

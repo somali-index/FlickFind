@@ -2,12 +2,15 @@ package com.example.flickfind.ui.home
 
 import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -33,20 +36,38 @@ import com.example.flickfind.ui.theme.FlickFindTheme
 fun HomeScree(
     onLogout: () -> Unit,
     onProfileClick: () -> Unit,
+    onMovieClick: () -> Unit,
     onSettingsClick: () -> Unit = {},
     viewModel: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val uiState by viewModel.homeUiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Xử lý hiển thị thông báo qua Snackbar
+    LaunchedEffect(uiState.userMessage) {
+        uiState.userMessage?.let { message ->
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+            viewModel.clearMessage()
+        }
+    }
 
     HomeScreeContent(
         uiState = uiState,
+        snackbarHostState = snackbarHostState,
         onLogout = onLogout,
         onProfileClick = onProfileClick,
-        onSettingsClick = onSettingsClick,
+        onSettingsClick = onMovieClick,
         onSearchClick = {
             context.startActivity(Intent(context, SearchActivity::class.java))
-        }
+        },
+        onSaveClick = { movie ->
+            viewModel.saveMovie(movie)
+        },
+        onMovieClick = onMovieClick
     )
 }
 
@@ -54,64 +75,39 @@ fun HomeScree(
 @Composable
 private fun HomeScreeContent(
     uiState: HomeUiState,
+    snackbarHostState: SnackbarHostState,
     onLogout: () -> Unit,
     onProfileClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    onSaveClick: (DataMovie) -> Unit,
+    onMovieClick: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Movie,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "FlickFind",
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        Icon(Icons.Default.Movie, null, tint = MaterialTheme.colorScheme.primary)
+                        Spacer(Modifier.width(8.dp))
+                        Text("FlickFind", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                     }
                 },
                 actions = {
                     IconButton(onClick = onSearchClick) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                        Icon(Icons.Default.Search, "Search")
                     }
-
                     Box {
                         IconButton(onClick = { showMenu = true }) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Menu",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
+                            Icon(Icons.Default.Person, "Menu", tint = MaterialTheme.colorScheme.primary)
                         }
-
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = { showMenu = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("👤 Thông tin cá nhân") },
-                                onClick = {
-                                    showMenu = false
-                                    onProfileClick()
-                                }
-                            )
+                        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                            DropdownMenuItem(text = { Text("👤 Thông tin cá nhân") }, onClick = { showMenu = false; onProfileClick() })
                             HorizontalDivider()
-                            DropdownMenuItem(
-                                text = { Text("🚪 Đăng xuất", color = Color.Red) },
-                                onClick = {
-                                    showMenu = false
-                                    onLogout()
-                                }
-                            )
+                            DropdownMenuItem(text = { Text("🚪 Đăng xuất", color = Color.Red) }, onClick = { showMenu = false; onLogout() })
                         }
                     }
                 }
@@ -119,17 +115,17 @@ private fun HomeScreeContent(
         }
     ) { paddingValues ->
         if (uiState.isLoading) {
-            Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize().background(Color(0xFF0F0F0F)).padding(paddingValues),
+                Modifier.fillMaxSize().background(Color(0xFF0F0F0F)).padding(paddingValues),
                 contentPadding = PaddingValues(bottom = 24.dp)
             ) {
                 item { HomeHeader() }
-                item { MovieSection(title = "🎬 Danh sách phim", movies = uiState.movieList) }
-                item { MovieSection(title = "🎬 Phim hot", movies = uiState.movieList) }
+                item { MovieSection("🎬 Danh sách phim", uiState.movieList, onSaveClick, onMovieClick) }
+                item { MovieSection("🎬 Phim hot", uiState.movieList, onSaveClick, onMovieClick) }
             }
         }
     }
@@ -137,97 +133,42 @@ private fun HomeScreeContent(
 
 @Composable
 fun HomeHeader() {
-    Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 48.dp, bottom = 8.dp)) {
-        Text(text = "Khám phá thế giới phim cùng", color = Color.Gray, fontSize = 14.sp)
-        Text(text = "FlickFind", color = Color.White, fontSize = 26.sp, fontWeight = FontWeight.Bold)
+    Column(Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 48.dp, bottom = 8.dp)) {
+        Text("Khám phá thế giới phim cùng", color = Color.Gray, fontSize = 14.sp)
+        Text("FlickFind", color = Color.White, fontSize = 26.sp, fontWeight = FontWeight.Bold)
     }
 }
 
 @Composable
-fun MovieSection(title: String, movies: List<DataMovie>) {
-    Column(modifier = Modifier.padding(top = 20.dp)) {
-        Text(
-            text = title,
-            color = Color.White,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(start = 16.dp, bottom = 12.dp)
-        )
+fun MovieSection(title: String, movies: List<DataMovie>, onSaveClick: (DataMovie) -> Unit, onMovieClick: () -> Unit) {
+    Column(Modifier.padding(top = 20.dp)) {
+        Text(title, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(start = 16.dp, bottom = 12.dp))
         LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(movies) { movie -> MovieCard(movie) }
+            items(movies) { movie -> MovieCard(movie, { onSaveClick(movie) }, onMovieClick) }
         }
     }
 }
 
 @Composable
-fun MovieCard(movie: DataMovie) {
-    Column(modifier = Modifier.width(120.dp)) {
+fun MovieCard(movie: DataMovie, onSaveClick: () -> Unit, onMovieClick: () -> Unit) {
+    Column(Modifier.width(120.dp).clickable { onMovieClick() }) {
         Card(
             shape = RoundedCornerShape(10.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
             modifier = Modifier.width(120.dp).height(180.dp)
         ) {
-            AsyncImage(
-                model = movie.URLimage,
-                contentDescription = movie.NameMovie,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+            Box(Modifier.fillMaxSize()) {
+                AsyncImage(model = movie.URLimage, contentDescription = movie.NameMovie, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                IconButton(
+                    onClick = onSaveClick,
+                    modifier = Modifier.align(Alignment.TopEnd).padding(4.dp).size(32.dp).background(Color.Black.copy(0.5f), CircleShape)
+                ) {
+                    Icon(Icons.Default.Bookmark, "Save", tint = Color(0xFF00E5FF), modifier = Modifier.size(18.dp))
+                }
+            }
         }
-        Spacer(modifier = Modifier.height(6.dp))
-        Text(text = movie.NameMovie, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium, maxLines = 2, overflow = TextOverflow.Ellipsis)
-        Text(text = movie.Description, color = Color.Gray, fontSize = 11.sp, maxLines = 1)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreePreview() {
-    FlickFindTheme {
-        HomeScreeContent(
-            uiState = HomeUiState(
-                movieList = listOf(
-                    DataMovie(NameMovie = "Phim 1", Description = "Mô tả phim 1"),
-                    DataMovie(NameMovie = "Phim 2", Description = "Mô tả phim 2")
-                ),
-                isLoading = false
-            ),
-            onLogout = {},
-            onProfileClick = {},
-            onSettingsClick = {},
-            onSearchClick = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeHeaderPreview() {
-    FlickFindTheme {
-        HomeHeader()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MovieSectionPreview() {
-    FlickFindTheme {
-        MovieSection(
-            title = "🎬 Danh sách phim",
-            movies = listOf(
-                DataMovie(NameMovie = "Phim 1", Description = "Mô tả phim 1"),
-                DataMovie(NameMovie = "Phim 2", Description = "Mô tả phim 2")
-            )
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MovieCardPreview() {
-    FlickFindTheme {
-        MovieCard(
-            movie = DataMovie(NameMovie = "Phim 1", Description = "Mô tả phim 1")
-        )
+        Spacer(Modifier.height(6.dp))
+        Text(movie.NameMovie, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium, maxLines = 2, overflow = TextOverflow.Ellipsis)
+        Text(movie.Description, color = Color.Gray, fontSize = 11.sp, maxLines = 1)
     }
 }
