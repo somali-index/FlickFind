@@ -1,18 +1,26 @@
 package com.example.flickfind.ui.auth
 
+import android.app.Application
 import android.util.Log
 import android.util.Patterns
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import com.example.flickfind.DATALAYER.AppRepository.Repository
+import com.example.flickfind.DATALAYER.Remote.AppRemote
+import com.example.flickfind.DATALAYER.Room.AppDatabase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val remote = AppRemote()
+    private val movieDao = AppDatabase.getDatabase(application).movieDao()
+    private val repository = Repository(remote, movieDao)
+    
     // Firebase Auth
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val auth: FirebaseAuth = remote.creatFirebaseAuth()
 
     // Backing property
     private val _uiState = MutableStateFlow(AuthUiState())
@@ -260,14 +268,15 @@ class AuthViewModel : ViewModel() {
         ).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
-
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isSuccess = true
-                    )
+                // Tạo profile người dùng trong Firestore
+                repository.updateUserProfile(state.email, state.fullName, null, null) { success ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isSuccess = true
+                        )
+                    }
                 }
-
             } else {
 
                 _uiState.update {

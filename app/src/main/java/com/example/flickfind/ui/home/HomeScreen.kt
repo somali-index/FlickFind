@@ -33,7 +33,7 @@ import com.example.flickfind.ui.SearchUI.SearchActivity
 import com.example.flickfind.ui.theme.FlickFindTheme
 
 @Composable
-fun HomeScree(
+fun HomeScreen(
     onLogout: () -> Unit,
     onProfileClick: () -> Unit,
     onMovieClick: () -> Unit,
@@ -42,6 +42,36 @@ fun HomeScree(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.homeUiState.collectAsState()
+
+    HomeScreenBody(
+        uiState = uiState,
+        onLogout = onLogout,
+        onProfileClick = onProfileClick,
+        onMovieClick = onMovieClick,
+        onSettingsClick = onSettingsClick,
+        onSearchClick = {
+            context.startActivity(Intent(context, SearchActivity::class.java))
+        },
+        onSaveClick = { movie ->
+            viewModel.saveMovie(movie)
+        },
+        onClearMessage = {
+            viewModel.clearMessage()
+        }
+    )
+}
+
+@Composable
+private fun HomeScreenBody(
+    uiState: HomeUiState,
+    onLogout: () -> Unit,
+    onProfileClick: () -> Unit,
+    onMovieClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onSearchClick: () -> Unit,
+    onSaveClick: (DataMovie) -> Unit,
+    onClearMessage: () -> Unit
+) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Xử lý hiển thị thông báo qua Snackbar
@@ -51,29 +81,25 @@ fun HomeScree(
                 message = message,
                 duration = SnackbarDuration.Short
             )
-            viewModel.clearMessage()
+            onClearMessage()
         }
     }
 
-    HomeScreeContent(
+    HomeScreenContent(
         uiState = uiState,
         snackbarHostState = snackbarHostState,
         onLogout = onLogout,
         onProfileClick = onProfileClick,
-        onSettingsClick = onMovieClick,
-        onSearchClick = {
-            context.startActivity(Intent(context, SearchActivity::class.java))
-        },
-        onSaveClick = { movie ->
-            viewModel.saveMovie(movie)
-        },
+        onSettingsClick = onSettingsClick,
+        onSearchClick = onSearchClick,
+        onSaveClick = onSaveClick,
         onMovieClick = onMovieClick
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeScreeContent(
+private fun HomeScreenContent(
     uiState: HomeUiState,
     snackbarHostState: SnackbarHostState,
     onLogout: () -> Unit,
@@ -170,5 +196,78 @@ fun MovieCard(movie: DataMovie, onSaveClick: () -> Unit, onMovieClick: () -> Uni
         Spacer(Modifier.height(6.dp))
         Text(movie.NameMovie, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium, maxLines = 2, overflow = TextOverflow.Ellipsis)
         Text(movie.Description, color = Color.Gray, fontSize = 11.sp, maxLines = 1)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    FlickFindTheme {
+        Surface(color = Color(0xFF0F0F0F)) {
+            HomeScreenBody(
+                uiState = HomeUiState(
+                    movieList = listOf(
+                        DataMovie(
+                            NameMovie = "Avengers: Endgame",
+                            Description = "The remaining Avengers must gather their allies and take a stand.",
+                            URLimage = "https://example.com/endgame.jpg"
+                        ),
+                        DataMovie(
+                            NameMovie = "Inception",
+                            Description = "A thief who steals corporate secrets through the use of dream-sharing technology.",
+                            URLimage = "https://example.com/inception.jpg"
+                        )
+                    ),
+                    isLoading = false
+                ),
+                onLogout = {},
+                onProfileClick = {},
+                onMovieClick = {},
+                onSettingsClick = {},
+                onSearchClick = {},
+                onSaveClick = {},
+                onClearMessage = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF0F0F0F)
+@Composable
+fun HomeHeaderPreview() {
+    FlickFindTheme {
+        HomeHeader()
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF0F0F0F)
+@Composable
+fun MovieSectionPreview() {
+    val sampleMovies = listOf(
+        DataMovie(NameMovie = "Avengers: Endgame", Description = "The remaining Avengers..."),
+        DataMovie(NameMovie = "Inception", Description = "A thief who steals...")
+    )
+    FlickFindTheme {
+        MovieSection(
+            title = "🎬 Danh sách phim",
+            movies = sampleMovies,
+            onSaveClick = {},
+            onMovieClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF0F0F0F)
+@Composable
+fun MovieCardPreview() {
+    FlickFindTheme {
+        MovieCard(
+            movie = DataMovie(
+                NameMovie = "Avengers: Endgame",
+                Description = "The remaining Avengers must gather their allies..."
+            ),
+            onSaveClick = {},
+            onMovieClick = {}
+        )
     }
 }

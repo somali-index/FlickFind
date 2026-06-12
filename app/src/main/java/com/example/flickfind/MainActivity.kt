@@ -17,7 +17,7 @@ import com.example.flickfind.ui.Navigation.ProfileRoute
 import com.example.flickfind.ui.Navigation.SavedMoviesRoute
 import com.example.flickfind.ui.Navigation.MovieDetailRoute
 import com.example.flickfind.ui.auth.AuthScreen
-import com.example.flickfind.ui.home.HomeScree
+import com.example.flickfind.ui.home.HomeScreen
 import com.example.flickfind.ui.theme.FlickFindTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.example.flickfind.ui.Navigation.UnderDevelopmentRoute
@@ -116,7 +116,7 @@ fun FlickFindApp() {
 
         // 2. Luồng Home
         composable<HomeRoute> {
-            HomeScree(
+            HomeScreen(
                 onLogout = {
                     auth.signOut()
                     navController.navigate(AuthRoute) {

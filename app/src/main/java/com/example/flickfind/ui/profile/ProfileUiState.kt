@@ -1,12 +1,17 @@
 package com.example.flickfind.ui.profile
 
 data class ProfileUiState(
-    val name: String = "GAY NGUYÊN",
-    val email: String = "abc@gmail.com",
-    val username: String = "@Gay",
-    val avatar: String = "https://i.pravatar.cc/300",
-    val isPremium: Boolean = true,
-    val savedMoviesCount: Int = 142,
-    val watchedMoviesCount: Int = 48,
-    val collectionsCount: Int = 5
+    val name: String = "",
+    val email: String = "",
+    val username: String = "",
+    val avatar: String = "",
+    val isPremium: Boolean = false,
+    val savedMoviesCount: Int = 0,
+    val watchedMoviesCount: Int = 0,
+    val collectionsCount: Int = 0,
+    val isLoading: Boolean = false,
+    val userMessage: String? = null,
+    val isChangePasswordDialogVisible: Boolean = false,
+    val isChangeNameDialogVisible: Boolean = false,
+    val isChangeUsernameDialogVisible: Boolean = false
 )

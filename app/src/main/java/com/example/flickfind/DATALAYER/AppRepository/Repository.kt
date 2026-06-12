@@ -66,7 +66,7 @@ class Repository(
     }
 
     // Lấy thông tin Profile người dùng từ Firestore
-    fun getUserProfile(email: String, onResult: (name: String, avatar: String) -> Unit) {
+    fun getUserProfile(email: String, onResult: (name: String, username: String, avatar: String) -> Unit) {
         db.collection("User")
             .whereEqualTo("Email", email)
             .get()
@@ -74,14 +74,47 @@ class Repository(
                 if (!querySnapshot.isEmpty) {
                     val document = querySnapshot.documents[0]
                     val name = document.getString("UserName") ?: "Người dùng"
+                    val username = document.getString("Handle") ?: ""
                     val avatar = document.getString("avatar") ?: ""
-                    onResult(name, avatar)
+                    onResult(name, username, avatar)
                 } else {
-                    onResult("Người dùng mới", "")
+                    onResult("Người dùng mới", "", "")
                 }
             }
             .addOnFailureListener {
-                onResult("Lỗi kết nối", "")
+                onResult("Lỗi kết nối", "", "")
             }
+    }
+
+    // Cập nhật thông tin Profile người dùng
+    fun updateUserProfile(email: String, name: String?, username: String?, avatar: String?, onResult: (Boolean) -> Unit) {
+        db.collection("User")
+            .whereEqualTo("Email", email)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val documentId = querySnapshot.documents[0].id
+                    val updates = mutableMapOf<String, Any>()
+                    if (name != null) updates["UserName"] = name
+                    if (username != null) updates["Handle"] = username
+                    if (avatar != null) updates["avatar"] = avatar
+
+                    db.collection("User").document(documentId)
+                        .update(updates)
+                        .addOnSuccessListener { onResult(true) }
+                        .addOnFailureListener { onResult(false) }
+                } else {
+                    // Nếu chưa có document thì tạo mới
+                    val newUser = mutableMapOf<String, Any>("Email" to email)
+                    if (name != null) newUser["UserName"] = name
+                    if (username != null) newUser["Handle"] = username
+                    if (avatar != null) newUser["avatar"] = avatar
+
+                    db.collection("User").add(newUser)
+                        .addOnSuccessListener { onResult(true) }
+                        .addOnFailureListener { onResult(false) }
+                }
+            }
+            .addOnFailureListener { onResult(false) }
     }
 }
