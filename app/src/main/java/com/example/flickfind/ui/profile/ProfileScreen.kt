@@ -1,8 +1,5 @@
 package com.example.flickfind.ui.profile
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -38,17 +35,12 @@ import com.example.flickfind.ui.theme.FlickFindTheme
 fun ProfileScreen(
     onBack: () -> Unit,
     onSavedMoviesClick: () -> Unit,
+    onLogout: () -> Unit,
     onUnderDevelopmentClick: () -> Unit,
     viewModel: ProfileViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { viewModel.updateAvatar(it) }
-    }
 
     LaunchedEffect(uiState.userMessage) {
         uiState.userMessage?.let {
@@ -62,8 +54,8 @@ fun ProfileScreen(
         snackbarHostState = snackbarHostState,
         onBack = onBack,
         onSavedMoviesClick = onSavedMoviesClick,
+        onLogout = onLogout,
         onUnderDevelopmentClick = onUnderDevelopmentClick,
-        onAvatarClick = { launcher.launch("image/*") },
         onShowChangeName = { viewModel.showChangeNameDialog(true) },
         onDismissChangeName = { viewModel.showChangeNameDialog(false) },
         onChangeName = { viewModel.updateName(it) },
@@ -83,8 +75,8 @@ fun ProfileScreenContent(
     snackbarHostState: SnackbarHostState,
     onBack: () -> Unit,
     onSavedMoviesClick: () -> Unit,
+    onLogout: () -> Unit,
     onUnderDevelopmentClick: () -> Unit,
-    onAvatarClick: () -> Unit,
     onShowChangeName: () -> Unit,
     onDismissChangeName: () -> Unit,
     onChangeName: (String) -> Unit,
@@ -138,7 +130,7 @@ fun ProfileScreenContent(
             item {
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Avatar with click to change
+                // Avatar
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Box(
                         modifier = Modifier
@@ -146,32 +138,15 @@ fun ProfileScreenContent(
                             .size(120.dp)
                             .border(2.dp, Color(0xFF00E5FF), CircleShape)
                             .padding(6.dp)
-                            .clickable { onAvatarClick() }
                     ) {
                         AsyncImage(
-                            model = uiState.avatar.ifEmpty { "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" },
+                            model = uiState.avatar.ifEmpty { "https://picsum.photos/200" },
                             contentDescription = "Avatar",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(CircleShape)
                         )
-                        // Camera overlay icon
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .size(32.dp)
-                                .background(Color(0xFF00E5FF), CircleShape)
-                                .border(2.dp, Color(0xFF0F0F0F), CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.CameraAlt,
-                                contentDescription = "Change Avatar",
-                                tint = Color.Black,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        }
                     }
                 }
 
@@ -251,7 +226,7 @@ fun ProfileScreenContent(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
-                    onClick = onUnderDevelopmentClick,
+                    onClick = onLogout,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
@@ -560,8 +535,8 @@ fun ProfileScreenPreview() {
             snackbarHostState = remember { SnackbarHostState() },
             onBack = {},
             onSavedMoviesClick = {},
+            onLogout = {},
             onUnderDevelopmentClick = {},
-            onAvatarClick = {},
             onShowChangeName = {},
             onDismissChangeName = {},
             onChangeName = {},

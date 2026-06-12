@@ -152,6 +152,12 @@ fun FlickFindApp() {
                     Log.d("NAVIGATION", "Navigating to SavedMoviesRoute")
                     navController.navigate(SavedMoviesRoute)
                 },
+                onLogout = {
+                    auth.signOut()
+                    navController.navigate(AuthRoute) {
+                        popUpTo(HomeRoute) { inclusive = true }
+                    }
+                },
                 onUnderDevelopmentClick = {
                     navController.navigate(UnderDevelopmentRoute)
                 }

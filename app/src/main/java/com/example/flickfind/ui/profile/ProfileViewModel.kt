@@ -1,8 +1,6 @@
 package com.example.flickfind.ui.profile
 
 import android.app.Application
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flickfind.DATALAYER.AppRepository.Repository
@@ -21,7 +19,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val movieDao = AppDatabase.getDatabase(application).movieDao()
     private val repository = Repository(remote, movieDao)
     private val auth = remote.creatFirebaseAuth()
-    private val storage = remote.creatRemoteStorage()
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState = _uiState.asStateFlow()
@@ -47,56 +44,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         _uiState.update { it.copy(userMessage = null) }
     }
 
-    fun updateAvatar(uri: Uri) {
-        val currentUser = auth.currentUser ?: run {
-            _uiState.update { it.copy(userMessage = "Vui lòng đăng nhập để thực hiện") }
-            return
-        }
-        
-        _uiState.update { it.copy(isLoading = true) }
-        
-        // Log bucket name to verify configuration
-        val bucket = storage.reference.bucket
-        Log.d("ProfileVM", "Bắt đầu tải ảnh lên bucket: $bucket, file: $uri")
-
-        val fileName = "avatars/${currentUser.uid}.jpg"
-        val ref = storage.reference.child(fileName)
-
-        ref.putFile(uri).continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let { 
-                    Log.e("ProfileVM", "Lỗi putFile: ${it.message}")
-                    throw it 
-                }
-            }
-            Log.d("ProfileVM", "Tải ảnh lên thành công, đang lấy download URL")
-            ref.downloadUrl
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val avatarUrl = task.result.toString()
-                Log.d("ProfileVM", "Lấy URL thành công: $avatarUrl")
-                repository.updateUserProfile(currentUser.email ?: "", null, null, avatarUrl) { success ->
-                    _uiState.update { 
-                        it.copy(
-                            avatar = if (success) avatarUrl else it.avatar, 
-                            isLoading = false, 
-                            userMessage = if (success) "Cập nhật ảnh đại diện thành công" else "Lỗi lưu thông tin vào Firestore"
-                        ) 
-                    }
-                }
-            } else {
-                val error = task.exception?.message ?: "Lỗi không xác định"
-                Log.e("ProfileVM", "Lỗi upload/URL: $error")
-                val userFriendlyError = when {
-                    error.contains("permission", ignoreCase = true) -> "Lỗi: Bạn chưa cấu hình Rules trong Firebase Storage (Permission Denied)"
-                    error.contains("404") || error.contains("not found", ignoreCase = true) -> "Lỗi 404: Không tìm thấy Bucket. Vui lòng kiểm tra lại cấu hình Firebase Storage trong Console."
-                    else -> "Lỗi: $error"
-                }
-                _uiState.update { it.copy(isLoading = false, userMessage = userFriendlyError) }
-            }
-        }
-    }
-
     fun updateName(newName: String) {
         val currentUser = auth.currentUser ?: return
         _uiState.update { it.copy(isLoading = true) }
@@ -115,7 +62,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun updateUsername(newUsername: String) {
         val currentUser = auth.currentUser ?: return
         _uiState.update { it.copy(isLoading = true) }
-        // Remove @ if user entered it
         val cleanUsername = newUsername.removePrefix("@")
         repository.updateUserProfile(currentUser.email ?: "", null, cleanUsername, null) { success ->
             _uiState.update {
@@ -185,12 +131,16 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             val userEmail = currentUser.email ?: ""
             _uiState.update { it.copy(email = userEmail) }
 
-            repository.getUserProfile(userEmail) { name, username, avatar ->
+            repository.getUserProfile(userEmail) { name, username, _ ->
+                // Tự động tạo URL ảnh ngẫu nhiên dựa trên thời gian hiện tại (phiên đăng nhập)
+                // Ảnh này sẽ giữ nguyên trong suốt vòng đời của ViewModel này
+                val randomAvatarUrl = "https://picsum.photos/seed/${userEmail}_${System.currentTimeMillis()}/200"
+                
                 _uiState.update {
                     it.copy(
                         name = name,
                         username = if (username.isNotEmpty()) "@$username" else it.username,
-                        avatar = avatar.ifEmpty { it.avatar }
+                        avatar = randomAvatarUrl
                     )
                 }
             }

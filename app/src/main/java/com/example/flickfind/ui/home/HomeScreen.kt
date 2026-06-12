@@ -109,7 +109,7 @@ private fun HomeScreenContent(
     onSaveClick: (DataMovie) -> Unit,
     onMovieClick: (String) -> Unit
 ) {
-    var showMenu by remember { mutableStateOf(false) }
+
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -126,15 +126,8 @@ private fun HomeScreenContent(
                     IconButton(onClick = onSearchClick) {
                         Icon(Icons.Default.Search, "Search")
                     }
-                    Box {
-                        IconButton(onClick = { showMenu = true }) {
-                            Icon(Icons.Default.Person, "Menu", tint = MaterialTheme.colorScheme.primary)
-                        }
-                        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                            DropdownMenuItem(text = { Text("👤 Thông tin cá nhân") }, onClick = { showMenu = false; onProfileClick() })
-                            HorizontalDivider()
-                            DropdownMenuItem(text = { Text("🚪 Đăng xuất", color = Color.Red) }, onClick = { showMenu = false; onLogout() })
-                        }
+                    IconButton(onClick = onProfileClick) {
+                        Icon(Icons.Default.Person, "Profile", tint = MaterialTheme.colorScheme.primary)
                     }
                 }
             )
