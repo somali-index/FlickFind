@@ -3,118 +3,141 @@ package com.example.flickfind.DATALAYER.AppRepository
 import com.example.flickfind.DATALAYER.DAO.DAOMovie
 import com.example.flickfind.DATALAYER.DataClass.DataMovie
 import com.example.flickfind.DATALAYER.Remote.AppRemote
-import com.example.flickfind.DATALAYER.Room.RoomMovies
+import com.example.flickfind.DATALAYER.Room.*
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class Repository(
     private val remote: AppRemote,
     private val movieDao: DAOMovie
 ) {
-    val db = remote.creatRemoteFS()
+    private val db = remote.creatRemoteFS()
 
-    // Lấy danh sách phim từ Firebase Firestore
     fun getMovies(onResult: (List<DataMovie>) -> Unit) {
         db.collection("MovieData")
             .get()
             .addOnSuccessListener { result ->
-                val movieList = mutableListOf<DataMovie>()
-                for (document in result) {
-                    val movie = document.toObject(DataMovie::class.java)
-                    movieList.add(movie)
+                val remoteMovies = result.toObjects(DataMovie::class.java)
+                if (remoteMovies.isNotEmpty()) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        saveToLocal(remoteMovies)
+                        val finalData = getMoviesFromLocal()
+                        withContext(Dispatchers.Main) {
+                            onResult(finalData)
+                        }
+                    }
+                } else {
+                    loadFromLocal(onResult)
                 }
-                onResult(movieList)
             }
             .addOnFailureListener {
-                onResult(emptyList())
+                loadFromLocal(onResult)
             }
     }
 
-    // Lưu phim vào Room Database (Local)
-    fun saveMovieToLocal(movie: DataMovie) {
+    private fun loadFromLocal(onResult: (List<DataMovie>) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
+            val localData = getMoviesFromLocal()
+            withContext(Dispatchers.Main) {
+                onResult(localData)
+            }
+        }
+    }
+
+    private suspend fun getMoviesFromLocal(): List<DataMovie> {
+        val movies = movieDao.getAllMovies()
+        val moviesWithGenres = movieDao.getMoviesWithGenres()
+        val moviesWithStudios = movieDao.getMoviesWithStudios()
+
+        return movies.map { roomMovie ->
+            val genres = moviesWithGenres.find { it.movie.IDMovie == roomMovie.IDMovie }?.genres
+            val genreString = genres?.joinToString(", ") { it.GenreName } ?: ""
+
+            val studios = moviesWithStudios.find { it.movie.IDMovie == roomMovie.IDMovie }?.studios
+            val studioString = studios?.joinToString(", ") { it.StudioName } ?: ""
+
+            DataMovie(
+                IDMovie = roomMovie.IDMovie,
+                NameMovie = roomMovie.NameMovie,
+                Description = roomMovie.Description,
+                Category = genreString,
+                Studio = studioString,
+                URLimage = roomMovie.URLimage,
+                TimeOneEP = roomMovie.TimeOneEP,
+                NummberEP = roomMovie.NummberEP,
+                Year = roomMovie.Year
+            )
+        }
+    }
+
+    private suspend fun saveToLocal(list: List<DataMovie>) {
+        list.forEach { data ->
             val roomMovie = RoomMovies(
-                IDMovie = movie.IDMovie,
-                NameMovie = movie.NameMovie,
-                Description = movie.Description,
-                IDStudio = movie.IDStudio,
-                URLimage = movie.URLimage,
-                TimeOneEP = movie.TimeOneEP,
-                NummberEP = movie.NummberEP
+                IDMovie = data.IDMovie,
+                NameMovie = data.NameMovie,
+                Description = data.Description,
+                IDStudio = data.IDStudio,
+                URLimage = data.URLimage,
+                TimeOneEP = data.TimeOneEP,
+                NummberEP = data.NummberEP,
+                Year = data.Year
             )
             movieDao.insertMovie(roomMovie)
-        }
-    }
 
-    // Xóa phim khỏi Room Database (Local)
-    fun deleteMovieFromLocal(movie: RoomMovies) {
-        CoroutineScope(Dispatchers.IO).launch {
-            movieDao.deleteMovie(movie)
-        }
-    }
-
-    // Lấy danh sách phim đã lưu dưới dạng Flow để cập nhật UI tự động (Khuyên dùng)
-    fun getAllSavedMoviesFlow(): Flow<List<RoomMovies>> {
-        return movieDao.getAllMoviesFlow()
-    }
-
-    // Lấy danh sách phim đã lưu (Dạng suspend cho các tác vụ xử lý một lần)
-    suspend fun getSavedMoviesList(): List<RoomMovies> {
-        return movieDao.getAllMovies()
-    }
-
-    // Lấy thông tin Profile người dùng từ Firestore
-    fun getUserProfile(email: String, onResult: (name: String, username: String, avatar: String) -> Unit) {
-        db.collection("User")
-            .whereEqualTo("Email", email)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                if (!querySnapshot.isEmpty) {
-                    val document = querySnapshot.documents[0]
-                    val name = document.getString("UserName") ?: "Người dùng"
-                    val username = document.getString("Handle") ?: ""
-                    val avatar = document.getString("avatar") ?: ""
-                    onResult(name, username, avatar)
-                } else {
-                    onResult("Người dùng mới", "", "")
+            if (data.Category.isNotEmpty()) {
+                data.Category.split(",").map { it.trim() }.forEach { name ->
+                    val genreId = name.hashCode().toString()
+                    movieDao.insertGenres(listOf(RoomGenre(genreId, name)))
+                    movieDao.insertMovieGenreCrossRef(MovieGenreCrossRef(data.IDMovie, genreId))
                 }
             }
-            .addOnFailureListener {
-                onResult("Lỗi kết nối", "", "")
+
+            if (data.Studio.isNotEmpty()) {
+                data.Studio.split(",").map { it.trim() }.forEach { name ->
+                    val studioId = name.hashCode().toString()
+                    movieDao.insertStudios(listOf(RoomStudio(studioId, name)))
+                    movieDao.insertMovieStudioCrossRef(MovieStudioCrossRef(data.IDMovie, studioId))
+                }
             }
+        }
     }
 
-    // Cập nhật thông tin Profile người dùng
+    // Các hàm này giữ lại để không làm lỗi các ViewModel khác đang dùng
     fun updateUserProfile(email: String, name: String?, username: String?, avatar: String?, onResult: (Boolean) -> Unit) {
-        db.collection("User")
-            .whereEqualTo("Email", email)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                if (!querySnapshot.isEmpty) {
-                    val documentId = querySnapshot.documents[0].id
-                    val updates = mutableMapOf<String, Any>()
-                    if (name != null) updates["UserName"] = name
-                    if (username != null) updates["Handle"] = username
-                    if (avatar != null) updates["avatar"] = avatar
-
-                    db.collection("User").document(documentId)
-                        .update(updates)
-                        .addOnSuccessListener { onResult(true) }
-                        .addOnFailureListener { onResult(false) }
-                } else {
-                    // Nếu chưa có document thì tạo mới
-                    val newUser = mutableMapOf<String, Any>("Email" to email)
-                    if (name != null) newUser["UserName"] = name
-                    if (username != null) newUser["Handle"] = username
-                    if (avatar != null) newUser["avatar"] = avatar
-
-                    db.collection("User").add(newUser)
-                        .addOnSuccessListener { onResult(true) }
-                        .addOnFailureListener { onResult(false) }
-                }
-            }
+        val userMap = mutableMapOf<String, Any>()
+        name?.let { userMap["name"] = it }
+        username?.let { userMap["username"] = it }
+        avatar?.let { userMap["avatar"] = it }
+        db.collection("Users").document(email).set(userMap, SetOptions.merge())
+            .addOnSuccessListener { onResult(true) }
             .addOnFailureListener { onResult(false) }
     }
+
+    fun getUserProfile(email: String, onResult: (name: String, username: String, avatar: String) -> Unit) {
+        db.collection("Users").document(email).get()
+            .addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    onResult(doc.getString("name") ?: "", doc.getString("username") ?: "", doc.getString("avatar") ?: "")
+                } else onResult("", "", "")
+            }
+            .addOnFailureListener { onResult("", "", "") }
+    }
+
+    fun saveMovieToLocal(movie: DataMovie) {
+        CoroutineScope(Dispatchers.IO).launch { saveToLocal(listOf(movie)) }
+    }
+
+    fun deleteMovieFromLocal(movie: DataMovie) {
+        CoroutineScope(Dispatchers.IO).launch {
+            movieDao.deleteMovie(RoomMovies(movie.IDMovie, movie.NameMovie, movie.Description, movie.IDStudio, movie.URLimage, movie.TimeOneEP, movie.NummberEP, movie.Year))
+        }
+    }
+
+    fun getAllSavedMoviesFlow(): Flow<List<DataMovie>> = flow { emit(getMoviesFromLocal()) }.flowOn(Dispatchers.IO)
 }

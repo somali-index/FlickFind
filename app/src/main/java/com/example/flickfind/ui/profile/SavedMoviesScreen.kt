@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.flickfind.DATALAYER.Room.RoomMovies
+import com.example.flickfind.DATALAYER.DataClass.DataMovie
 import com.example.flickfind.ui.theme.FlickFindTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,10 +50,10 @@ fun SavedMoviesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavedMoviesContent(
-    savedMovies: List<RoomMovies>,
+    savedMovies: List<DataMovie>,
     onBack: () -> Unit,
     onMovieClick: (String) -> Unit,
-    onDeleteMovie: (RoomMovies) -> Unit
+    onDeleteMovie: (DataMovie) -> Unit
 ) {
     Scaffold(
         containerColor = Color(0xFF0F0F0F),
@@ -105,7 +105,7 @@ fun SavedMoviesContent(
 }
 
 @Composable
-fun SavedMovieItem(movie: RoomMovies, onClick: () -> Unit, onDeleteClick: () -> Unit) {
+fun SavedMovieItem(movie: DataMovie, onClick: () -> Unit, onDeleteClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -158,9 +158,9 @@ fun SavedMoviesPreview() {
     FlickFindTheme {
         SavedMoviesContent(
             savedMovies = listOf(
-                RoomMovies("1", "Inception", "A thief who steals corporate secrets...", "S1", "https://example.com/inception.jpg", "148 min", "1"),
-                RoomMovies("2", "The Dark Knight", "When the menace known as the Joker wreaks havoc...", "S1", "https://example.com/tdk.jpg", "152 min", "1"),
-                RoomMovies("3", "Interstellar", "A team of explorers travel through a wormhole...", "S1", "https://example.com/interstellar.jpg", "169 min", "1")
+                DataMovie("1", "Inception", "A thief who steals corporate secrets...", "S1", "https://example.com/inception.jpg", "148 min", "1"),
+                DataMovie("2", "The Dark Knight", "When the menace known as the Joker wreaks havoc...", "S1", "https://example.com/tdk.jpg", "152 min", "1"),
+                DataMovie("3", "Interstellar", "A team of explorers travel through a wormhole...", "S1", "https://example.com/interstellar.jpg", "169 min", "1")
             ),
             onBack = {},
             onMovieClick = {},

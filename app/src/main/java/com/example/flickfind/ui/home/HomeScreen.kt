@@ -36,7 +36,7 @@ import com.example.flickfind.ui.theme.FlickFindTheme
 fun HomeScreen(
     onLogout: () -> Unit,
     onProfileClick: () -> Unit,
-    onMovieClick: () -> Unit,
+    onMovieClick: (String) -> Unit,
     onSettingsClick: () -> Unit = {},
     viewModel: HomeViewModel = viewModel()
 ) {
@@ -66,7 +66,7 @@ private fun HomeScreenBody(
     uiState: HomeUiState,
     onLogout: () -> Unit,
     onProfileClick: () -> Unit,
-    onMovieClick: () -> Unit,
+    onMovieClick: (String) -> Unit,
     onSettingsClick: () -> Unit,
     onSearchClick: () -> Unit,
     onSaveClick: (DataMovie) -> Unit,
@@ -107,7 +107,7 @@ private fun HomeScreenContent(
     onSettingsClick: () -> Unit,
     onSearchClick: () -> Unit,
     onSaveClick: (DataMovie) -> Unit,
-    onMovieClick: () -> Unit
+    onMovieClick: (String) -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
@@ -166,11 +166,11 @@ fun HomeHeader() {
 }
 
 @Composable
-fun MovieSection(title: String, movies: List<DataMovie>, onSaveClick: (DataMovie) -> Unit, onMovieClick: () -> Unit) {
+fun MovieSection(title: String, movies: List<DataMovie>, onSaveClick: (DataMovie) -> Unit, onMovieClick: (String) -> Unit) {
     Column(Modifier.padding(top = 20.dp)) {
         Text(title, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(start = 16.dp, bottom = 12.dp))
         LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(movies) { movie -> MovieCard(movie, { onSaveClick(movie) }, onMovieClick) }
+            items(movies) { movie -> MovieCard(movie, { onSaveClick(movie) }, { onMovieClick(movie.IDMovie) }) }
         }
     }
 }

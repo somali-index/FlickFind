@@ -268,14 +268,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         ).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
-                // Tạo profile người dùng trong Firestore
-                repository.updateUserProfile(state.email, state.fullName, null, null) { success ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            isSuccess = true
-                        )
-                    }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isSuccess = true
+                    )
                 }
             } else {
 

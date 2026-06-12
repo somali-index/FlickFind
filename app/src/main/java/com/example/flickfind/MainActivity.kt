@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.flickfind.DATALAYER.Remote.AppRemote
 import com.example.flickfind.ui.Navigation.AuthRoute
 import com.example.flickfind.ui.Navigation.HomeRoute
@@ -126,13 +127,22 @@ fun FlickFindApp() {
                 onProfileClick = {
                     navController.navigate(ProfileRoute)
                 },
-                onMovieClick = {
-                    navController.navigate(UnderDevelopmentRoute)
+                onMovieClick = { id ->
+                    navController.navigate(MovieDetailRoute(movieId = id))
                 }
             )
         }
 
-        // 3. Luồng Profile
+        // 3. Chi tiết phim
+        composable<MovieDetailRoute> { backStackEntry ->
+            val route: MovieDetailRoute = backStackEntry.toRoute()
+            com.example.flickfind.ui.home.MovieDetailScreen(
+                movieId = route.movieId,
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        // 4. Luồng Profile
         composable<ProfileRoute> {
             ProfileScreen(
                 onBack = {

@@ -3,7 +3,7 @@ package com.example.flickfind.DATALAYER.DAO
 import androidx.room.*
 import com.example.flickfind.DATALAYER.Room.*
 
-// Lớp bao gói để lấy Phim kèm danh sách Thể loại
+
 data class MovieWithGenres(
     @Embedded val movie: RoomMovies,
     @Relation(
@@ -14,7 +14,7 @@ data class MovieWithGenres(
     val genres: List<RoomGenre>
 )
 
-// Lớp bao gói để lấy Phim kèm danh sách Studio
+
 data class MovieWithStudios(
     @Embedded val movie: RoomMovies,
     @Relation(
@@ -28,7 +28,7 @@ data class MovieWithStudios(
 @Dao
 interface DAOMovie {
 
-    // --- CÁC HÀM CHO PHIM ---
+    // CÁC HÀM CHO PHIM
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie: RoomMovies)
 
@@ -36,15 +36,12 @@ interface DAOMovie {
     suspend fun insertMovies(list: List<RoomMovies>)
 
     @Query("SELECT * FROM movieData")
-    fun getAllMoviesFlow(): kotlinx.coroutines.flow.Flow<List<RoomMovies>>
-
-    @Query("SELECT * FROM movieData")
     suspend fun getAllMovies(): List<RoomMovies>
 
     @Delete
     suspend fun deleteMovie(movie: RoomMovies)
 
-    // --- CÁC HÀM CHO THỂ LOẠI & STUDIO ---
+    // CÁC HÀM CHO THỂ LOẠI va STUDIO
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGenres(genres: List<RoomGenre>)
 
@@ -57,7 +54,7 @@ interface DAOMovie {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovieStudioCrossRef(crossRef: MovieStudioCrossRef)
 
-    // --- TRUY VẤN QUAN HỆ ---
+    //  TRUY VẤN QUAN HỆ (Nối bảng)
     @Transaction
     @Query("SELECT * FROM movieData")
     suspend fun getMoviesWithGenres(): List<MovieWithGenres>
@@ -70,7 +67,7 @@ interface DAOMovie {
     @Query("SELECT * FROM movieData")
     suspend fun getMoviesWithStudios(): List<MovieWithStudios>
 
-    // --- XÓA DỮ LIỆU ---
+    //  XÓA DL
     @Query("DELETE FROM movieData")
     suspend fun clearAll()
 }

@@ -18,7 +18,6 @@ import com.example.flickfind.DATALAYER.DAO.DAOMovie
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun movieDao(): DAOMovie
 
     companion object {
@@ -30,7 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "flickfind_database"
+                    "app_database"
                 ).build()
                 INSTANCE = instance
                 instance
