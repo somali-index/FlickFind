@@ -1,0 +1,9 @@
+com.example.flickfind.app-pngs-0 C:\gifKOTLIN\FlickFind\app\build\generated\res\pngs\debug
+com.example.flickfind.app-res-1 C:\gifKOTLIN\FlickFind\app\build\generated\res\processDebugGoogleServices
+com.example.flickfind.app-resValues-2 C:\gifKOTLIN\FlickFind\app\build\generated\res\resValues\debug
+com.example.flickfind.app-updated_navigation_xml-3 C:\gifKOTLIN\FlickFind\app\build\generated\updated_navigation_xml\debug
+com.example.flickfind.app-packageDebugResources-4 C:\gifKOTLIN\FlickFind\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.example.flickfind.app-packageDebugResources-5 C:\gifKOTLIN\FlickFind\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.example.flickfind.app-debug-6 C:\gifKOTLIN\FlickFind\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.example.flickfind.app-debug-7 C:\gifKOTLIN\FlickFind\app\src\debug\res
+com.example.flickfind.app-main-8 C:\gifKOTLIN\FlickFind\app\src\main\res
