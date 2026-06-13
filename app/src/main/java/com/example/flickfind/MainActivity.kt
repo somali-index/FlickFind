@@ -25,6 +25,10 @@ import com.example.flickfind.ui.Navigation.UnderDevelopmentRoute
 import com.example.flickfind.ui.common.UnderDevelopmentScreen
 import com.example.flickfind.ui.profile.ProfileScreen
 import com.example.flickfind.ui.profile.SavedMoviesScreen
+import com.example.flickfind.ui.profile.CollectionsScreen
+import com.example.flickfind.ui.profile.CollectionDetailScreen
+import com.example.flickfind.ui.Navigation.CollectionsRoute
+import com.example.flickfind.ui.Navigation.CollectionDetailRoute
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,6 +156,9 @@ fun FlickFindApp() {
                     Log.d("NAVIGATION", "Navigating to SavedMoviesRoute")
                     navController.navigate(SavedMoviesRoute)
                 },
+                onCollectionsClick = {
+                    navController.navigate(CollectionsRoute)
+                },
                 onLogout = {
                     auth.signOut()
                     navController.navigate(AuthRoute) {
@@ -170,13 +177,36 @@ fun FlickFindApp() {
                 onBack = {
                     navController.popBackStack()
                 },
-                onMovieClick = { _ ->
-                    navController.navigate(UnderDevelopmentRoute)
+                onMovieClick = { id ->
+                    navController.navigate(MovieDetailRoute(movieId = id))
                 }
             )
         }
 
-        // 5. Tính năng đang phát triển
+        // 5. Bộ sưu tập
+        composable<CollectionsRoute> {
+            CollectionsScreen(
+                onBack = { navController.popBackStack() },
+                onCollectionClick = { id, name ->
+                    navController.navigate(CollectionDetailRoute(collectionId = id, collectionName = name))
+                }
+            )
+        }
+
+        // 6. Chi tiết bộ sưu tập
+        composable<CollectionDetailRoute> { backStackEntry ->
+            val route: CollectionDetailRoute = backStackEntry.toRoute()
+            CollectionDetailScreen(
+                collectionId = route.collectionId,
+                collectionName = route.collectionName,
+                onBack = { navController.popBackStack() },
+                onMovieClick = { id ->
+                    navController.navigate(MovieDetailRoute(movieId = id))
+                }
+            )
+        }
+
+        // 7. Tính năng đang phát triển
         composable<UnderDevelopmentRoute> {
             UnderDevelopmentScreen(
                 onBack = {

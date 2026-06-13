@@ -250,7 +250,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     // ── REGISTER ────────────────────────────────────────────────
 
     fun onRegisterClick() {
-
         if (!validateRegisterInput()) return
 
         val state = _uiState.value
@@ -266,16 +265,28 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             state.email,
             state.password
         ).addOnCompleteListener { task ->
-
             if (task.isSuccessful) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isSuccess = true
-                    )
+                val email = state.email
+                val fullName = state.fullName
+
+                // Cập nhật Profile lên Firestore và Room ngay sau khi đăng ký thành công
+                repository.updateUserProfile(
+                    email = email,
+                    name = fullName,
+                    username = email.substringBefore("@"),
+                    avatar = "https://ui-avatars.com/api/?name=${fullName.replace(" ", "+")}&background=random"
+                ) { success ->
+                    // Lưu vào Local để đồng bộ trạng thái đăng nhập
+                    repository.saveUserToLocal(com.example.flickfind.DATALAYER.Room.RoomUser(email, fullName))
+                    
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isSuccess = true
+                        )
+                    }
                 }
             } else {
-
                 _uiState.update {
                     it.copy(
                         isLoading = false,

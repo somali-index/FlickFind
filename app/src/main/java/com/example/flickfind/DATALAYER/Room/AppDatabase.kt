@@ -12,9 +12,10 @@ import com.example.flickfind.DATALAYER.DAO.DAOMovie
         RoomGenre::class,
         RoomStudio::class,
         MovieGenreCrossRef::class,
-        MovieStudioCrossRef::class
+        MovieStudioCrossRef::class,
+        RoomUser::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -30,7 +31,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }

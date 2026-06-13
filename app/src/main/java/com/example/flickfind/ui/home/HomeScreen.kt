@@ -10,10 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,15 +19,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.flickfind.DATALAYER.DataClass.DataCollection
 import com.example.flickfind.DATALAYER.DataClass.DataMovie
 import com.example.flickfind.ui.SearchUI.SearchActivity
 import com.example.flickfind.ui.theme.FlickFindTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -52,8 +52,17 @@ fun HomeScreen(
         onSearchClick = {
             context.startActivity(Intent(context, SearchActivity::class.java))
         },
-        onSaveClick = { movie ->
+        onSaveLocal = { movie ->
             viewModel.saveMovie(movie)
+        },
+        onSaveToAccount = { movie ->
+            viewModel.saveMovieToAccount(movie)
+        },
+        onSaveToCollection = { movie, collectionName ->
+            viewModel.saveMovieToCollection(movie, collectionName)
+        },
+        onFetchCollections = {
+            viewModel.fetchUserCollections()
         },
         onClearMessage = {
             viewModel.clearMessage()
@@ -69,10 +78,15 @@ private fun HomeScreenBody(
     onMovieClick: (String) -> Unit,
     onSettingsClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onSaveClick: (DataMovie) -> Unit,
+    onSaveLocal: (DataMovie) -> Unit,
+    onSaveToAccount: (DataMovie) -> Unit,
+    onSaveToCollection: (DataMovie, String) -> Unit,
+    onFetchCollections: () -> Unit,
     onClearMessage: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    var selectedMovieForSave by remember { mutableStateOf<DataMovie?>(null) }
+    val scope = rememberCoroutineScope()
 
     // Xử lý hiển thị thông báo qua Snackbar
     LaunchedEffect(uiState.userMessage) {
@@ -92,9 +106,98 @@ private fun HomeScreenBody(
         onProfileClick = onProfileClick,
         onSettingsClick = onSettingsClick,
         onSearchClick = onSearchClick,
-        onSaveClick = onSaveClick,
+        onSaveClick = { movie -> 
+            selectedMovieForSave = movie
+            onFetchCollections()
+        },
         onMovieClick = onMovieClick
     )
+
+    if (selectedMovieForSave != null) {
+        SaveOptionsBottomSheet(
+            movie = selectedMovieForSave!!,
+            collections = uiState.collections,
+            onDismiss = { selectedMovieForSave = null },
+            onSaveLocal = {
+                onSaveLocal(it)
+                selectedMovieForSave = null
+            },
+            onSaveToAccount = {
+                onSaveToAccount(it)
+                selectedMovieForSave = null
+            },
+            onSaveToCollection = { movie, colName ->
+                onSaveToCollection(movie, colName)
+                selectedMovieForSave = null
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SaveOptionsBottomSheet(
+    movie: DataMovie,
+    collections: List<DataCollection>,
+    onDismiss: () -> Unit,
+    onSaveLocal: (DataMovie) -> Unit,
+    onSaveToAccount: (DataMovie) -> Unit,
+    onSaveToCollection: (DataMovie, String) -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        containerColor = Color(0xFF1A1A1A),
+        contentColor = Color.White
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp, start = 16.dp, end = 16.dp)
+        ) {
+            Text(
+                text = "Lưu phim: ${movie.NameMovie}",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            // Option 1: Quick Save (Local)
+            ListItem(
+                headlineContent = { Text("Lưu nhanh vào máy (Offline)") },
+                leadingContent = { Icon(Icons.Default.DownloadForOffline, contentDescription = null, tint = Color(0xFF00E5FF)) },
+                colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                modifier = Modifier.clickable { onSaveLocal(movie) }
+            )
+
+            // Option 2: Save to Account (Cloud Sync)
+            ListItem(
+                headlineContent = { Text("Lưu vào tài khoản (Đồng bộ Cloud)") },
+                leadingContent = { Icon(Icons.Default.CloudUpload, contentDescription = null, tint = Color(0xFF4CAF50)) },
+                colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                modifier = Modifier.clickable { onSaveToAccount(movie) }
+            )
+
+            HorizontalDivider(color = Color.DarkGray, thickness = 0.5.dp)
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Lưu vào bộ sưu tập (Cloud)", fontSize = 14.sp, color = Color.Gray)
+
+            if (collections.isEmpty()) {
+                Box(Modifier.fillMaxWidth().padding(24.dp), contentAlignment = Alignment.Center) {
+                    Text("Bạn chưa có bộ sưu tập nào.\nHãy tạo trong mục Profile.", textAlign = TextAlign.Center, color = Color.Gray, fontSize = 12.sp)
+                }
+            } else {
+                collections.forEach { collection ->
+                    ListItem(
+                        headlineContent = { Text(collection.CollectionName) },
+                        leadingContent = { Icon(Icons.Default.Folder, contentDescription = null, tint = Color.Yellow) },
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        modifier = Modifier.clickable { onSaveToCollection(movie, collection.CollectionName) }
+                    )
+                }
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,8 +212,6 @@ private fun HomeScreenContent(
     onSaveClick: (DataMovie) -> Unit,
     onMovieClick: (String) -> Unit
 ) {
-
-
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
@@ -143,8 +244,24 @@ private fun HomeScreenContent(
                 contentPadding = PaddingValues(bottom = 24.dp)
             ) {
                 item { HomeHeader() }
-                item { MovieSection("🎬 Danh sách phim", uiState.movieList, onSaveClick, onMovieClick) }
-                item { MovieSection("🎬 Phim hot", uiState.movieList, onSaveClick, onMovieClick) }
+                item { 
+                    MovieSection(
+                        title = "🎬 Danh sách phim", 
+                        movies = uiState.movieList, 
+                        savedMovieIds = uiState.savedMovieIds,
+                        onSaveClick = onSaveClick, 
+                        onMovieClick = onMovieClick
+                    ) 
+                }
+                item { 
+                    MovieSection(
+                        title = "🎬 Phim hot", 
+                        movies = uiState.movieList, 
+                        savedMovieIds = uiState.savedMovieIds,
+                        onSaveClick = onSaveClick, 
+                        onMovieClick = onMovieClick
+                    ) 
+                }
             }
         }
     }
@@ -159,17 +276,30 @@ fun HomeHeader() {
 }
 
 @Composable
-fun MovieSection(title: String, movies: List<DataMovie>, onSaveClick: (DataMovie) -> Unit, onMovieClick: (String) -> Unit) {
+fun MovieSection(
+    title: String, 
+    movies: List<DataMovie>, 
+    savedMovieIds: Set<String>,
+    onSaveClick: (DataMovie) -> Unit, 
+    onMovieClick: (String) -> Unit
+) {
     Column(Modifier.padding(top = 20.dp)) {
         Text(title, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(start = 16.dp, bottom = 12.dp))
         LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(movies) { movie -> MovieCard(movie, { onSaveClick(movie) }, { onMovieClick(movie.IDMovie) }) }
+            items(movies) { movie -> 
+                MovieCard(
+                    movie = movie, 
+                    isSaved = savedMovieIds.contains(movie.IDMovie),
+                    onSaveClick = { onSaveClick(movie) }, 
+                    onMovieClick = { onMovieClick(movie.IDMovie) }
+                ) 
+            }
         }
     }
 }
 
 @Composable
-fun MovieCard(movie: DataMovie, onSaveClick: () -> Unit, onMovieClick: () -> Unit) {
+fun MovieCard(movie: DataMovie, isSaved: Boolean, onSaveClick: () -> Unit, onMovieClick: () -> Unit) {
     Column(Modifier.width(120.dp).clickable { onMovieClick() }) {
         Card(
             shape = RoundedCornerShape(10.dp),
@@ -182,7 +312,12 @@ fun MovieCard(movie: DataMovie, onSaveClick: () -> Unit, onMovieClick: () -> Uni
                     onClick = onSaveClick,
                     modifier = Modifier.align(Alignment.TopEnd).padding(4.dp).size(32.dp).background(Color.Black.copy(0.5f), CircleShape)
                 ) {
-                    Icon(Icons.Default.Bookmark, "Save", tint = Color(0xFF00E5FF), modifier = Modifier.size(18.dp))
+                    Icon(
+                        imageVector = if (isSaved) Icons.Default.BookmarkAdded else Icons.Default.BookmarkBorder, 
+                        contentDescription = "Save", 
+                        tint = if (isSaved) Color(0xFFFFD700) else Color.White, 
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
             }
         }
@@ -201,16 +336,19 @@ fun HomeScreenPreview() {
                 uiState = HomeUiState(
                     movieList = listOf(
                         DataMovie(
+                            IDMovie = "1",
                             NameMovie = "Avengers: Endgame",
                             Description = "The remaining Avengers must gather their allies and take a stand.",
                             URLimage = "https://example.com/endgame.jpg"
                         ),
                         DataMovie(
+                            IDMovie = "2",
                             NameMovie = "Inception",
                             Description = "A thief who steals corporate secrets through the use of dream-sharing technology.",
                             URLimage = "https://example.com/inception.jpg"
                         )
                     ),
+                    savedMovieIds = setOf("1"),
                     isLoading = false
                 ),
                 onLogout = {},
@@ -218,7 +356,10 @@ fun HomeScreenPreview() {
                 onMovieClick = {},
                 onSettingsClick = {},
                 onSearchClick = {},
-                onSaveClick = {},
+                onSaveLocal = {},
+                onSaveToAccount = {},
+                onSaveToCollection = { _, _ -> },
+                onFetchCollections = {},
                 onClearMessage = {}
             )
         }
@@ -244,6 +385,7 @@ fun MovieSectionPreview() {
         MovieSection(
             title = "🎬 Danh sách phim",
             movies = sampleMovies,
+            savedMovieIds = emptySet(),
             onSaveClick = {},
             onMovieClick = {}
         )
@@ -259,6 +401,7 @@ fun MovieCardPreview() {
                 NameMovie = "Avengers: Endgame",
                 Description = "The remaining Avengers must gather their allies..."
             ),
+            isSaved = true,
             onSaveClick = {},
             onMovieClick = {}
         )

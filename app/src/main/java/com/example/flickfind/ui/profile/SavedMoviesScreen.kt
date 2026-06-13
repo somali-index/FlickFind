@@ -38,9 +38,11 @@ fun SavedMoviesScreen(
     viewModel: SavedMoviesViewModel = viewModel()
 ) {
     val savedMovies by viewModel.savedMovies.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     SavedMoviesContent(
         savedMovies = savedMovies,
+        isLoading = isLoading,
         onBack = onBack,
         onMovieClick = onMovieClick,
         onDeleteMovie = { viewModel.removeMovie(it) }
@@ -51,6 +53,7 @@ fun SavedMoviesScreen(
 @Composable
 fun SavedMoviesContent(
     savedMovies: List<DataMovie>,
+    isLoading: Boolean,
     onBack: () -> Unit,
     onMovieClick: (String) -> Unit,
     onDeleteMovie: (DataMovie) -> Unit
@@ -73,31 +76,37 @@ fun SavedMoviesContent(
             )
         }
     ) { padding ->
-        if (savedMovies.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Chưa có phim nào được lưu", color = Color.Gray)
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            ) {
-                items(savedMovies) { movie ->
-                    SavedMovieItem(
-                        movie = movie,
-                        onClick = { onMovieClick(movie.IDMovie) },
-                        onDeleteClick = { onDeleteMovie(movie) }
-                    )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            if (isLoading && savedMovies.isEmpty()) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Color(0xFFFFD700)
+                )
+            } else if (savedMovies.isEmpty()) {
+                Text(
+                    text = "Chưa có phim nào được lưu",
+                    color = Color.Gray,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(savedMovies) { movie ->
+                        SavedMovieItem(
+                            movie = movie,
+                            onClick = { onMovieClick(movie.IDMovie) },
+                            onDeleteClick = { onDeleteMovie(movie) }
+                        )
+                    }
                 }
             }
         }
@@ -158,10 +167,10 @@ fun SavedMoviesPreview() {
     FlickFindTheme {
         SavedMoviesContent(
             savedMovies = listOf(
-                DataMovie("1", "Inception", "A thief who steals corporate secrets...", "S1", "https://example.com/inception.jpg", "148 min", "1"),
-                DataMovie("2", "The Dark Knight", "When the menace known as the Joker wreaks havoc...", "S1", "https://example.com/tdk.jpg", "152 min", "1"),
-                DataMovie("3", "Interstellar", "A team of explorers travel through a wormhole...", "S1", "https://example.com/interstellar.jpg", "169 min", "1")
+                DataMovie("1", "Inception", "A thief who steals corporate secrets...", "S1", "https://example.com/inception.jpg", "148 min", "1", "Action", "Warner Bros", "2010"),
+                DataMovie("2", "The Dark Knight", "When the menace known as the Joker wreaks havoc...", "S1", "https://example.com/tdk.jpg", "152 min", "1", "Action", "Warner Bros", "2008")
             ),
+            isLoading = false,
             onBack = {},
             onMovieClick = {},
             onDeleteMovie = {}
@@ -175,6 +184,7 @@ fun SavedMoviesEmptyPreview() {
     FlickFindTheme {
         SavedMoviesContent(
             savedMovies = emptyList(),
+            isLoading = false,
             onBack = {},
             onMovieClick = {},
             onDeleteMovie = {}

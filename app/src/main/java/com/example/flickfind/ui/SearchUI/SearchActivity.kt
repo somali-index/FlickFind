@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.flickfind.ui.theme.FlickFindTheme
 
 class SearchActivity : ComponentActivity() {
 
@@ -18,7 +19,9 @@ class SearchActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            MovieSearchScreen()
+            FlickFindTheme {
+                MovieSearchScreen()
+            }
         }
     }
 

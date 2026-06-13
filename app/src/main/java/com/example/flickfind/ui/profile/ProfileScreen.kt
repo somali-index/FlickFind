@@ -35,6 +35,7 @@ import com.example.flickfind.ui.theme.FlickFindTheme
 fun ProfileScreen(
     onBack: () -> Unit,
     onSavedMoviesClick: () -> Unit,
+    onCollectionsClick: () -> Unit,
     onLogout: () -> Unit,
     onUnderDevelopmentClick: () -> Unit,
     viewModel: ProfileViewModel = viewModel()
@@ -54,6 +55,7 @@ fun ProfileScreen(
         snackbarHostState = snackbarHostState,
         onBack = onBack,
         onSavedMoviesClick = onSavedMoviesClick,
+        onCollectionsClick = onCollectionsClick,
         onLogout = onLogout,
         onUnderDevelopmentClick = onUnderDevelopmentClick,
         onShowChangeName = { viewModel.showChangeNameDialog(true) },
@@ -75,6 +77,7 @@ fun ProfileScreenContent(
     snackbarHostState: SnackbarHostState,
     onBack: () -> Unit,
     onSavedMoviesClick: () -> Unit,
+    onCollectionsClick: () -> Unit,
     onLogout: () -> Unit,
     onUnderDevelopmentClick: () -> Unit,
     onShowChangeName: () -> Unit,
@@ -187,7 +190,7 @@ fun ProfileScreenContent(
                         modifier = Modifier.weight(1f),
                         icon = Icons.Default.Bookmark,
                         title = "Phim Đã Lưu",
-                        count = uiState.savedMoviesCount.toString(),
+                        count = uiState.quickSaveCount.toString(),
                         onClick = onSavedMoviesClick
                     )
                     StatCard(
@@ -202,7 +205,7 @@ fun ProfileScreenContent(
                         icon = Icons.Default.LibraryMusic,
                         title = "Bộ Sưu Tập",
                         count = uiState.collectionsCount.toString(),
-                        onClick = onUnderDevelopmentClick
+                        onClick = onCollectionsClick
                     )
                 }
 
@@ -530,11 +533,12 @@ fun ProfileScreenPreview() {
                 name = "GAY NGUYÊN",
                 username = "@Gay",
                 email = "abc@gmail.com",
-                savedMoviesCount = 142
+                quickSaveCount = 142
             ),
             snackbarHostState = remember { SnackbarHostState() },
             onBack = {},
             onSavedMoviesClick = {},
+            onCollectionsClick = {},
             onLogout = {},
             onUnderDevelopmentClick = {},
             onShowChangeName = {},

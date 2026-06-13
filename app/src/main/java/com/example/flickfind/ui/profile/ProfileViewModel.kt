@@ -23,9 +23,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val forbiddenNames = listOf("Danh sách đã lưu", "LƯU NHANH", "Quick Save", "Saved Movies", "Default")
+
     init {
         fetchUserProfile()
-        observeSavedMoviesCount()
+        observeQuickSaveCount()
+        observeCollectionsCount()
     }
 
     fun showChangePasswordDialog(show: Boolean) {
@@ -116,11 +119,44 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             }
     }
 
-    private fun observeSavedMoviesCount() {
+    private fun observeQuickSaveCount() {
+        val userEmail = auth.currentUser?.email ?: return
         viewModelScope.launch {
-            repository.getAllSavedMoviesFlow().collectLatest { movies ->
-                _uiState.update { it.copy(savedMoviesCount = movies.size) }
+            // Theo dõi phim Local
+            val localMoviesFlow = repository.getAllSavedMoviesFlow()
+            
+            // Lấy phim Cloud từ bộ sưu tập "Default"
+            repository.getDefaultCollectionId(userEmail) { collectionId ->
+                if (collectionId != null) {
+                    repository.getMoviesInCollection(collectionId) { cloudMovies ->
+                        viewModelScope.launch {
+                            localMoviesFlow.collectLatest { localMovies ->
+                                val totalCount = (localMovies + cloudMovies).distinctBy { it.IDMovie }.size
+                                _uiState.update { it.copy(quickSaveCount = totalCount) }
+                            }
+                        }
+                    }
+                } else {
+                    // Nếu chưa có Default collection, chỉ hiện số lượng local
+                    viewModelScope.launch {
+                        localMoviesFlow.collectLatest { localMovies ->
+                            _uiState.update { it.copy(quickSaveCount = localMovies.size) }
+                        }
+                    }
+                }
             }
+        }
+    }
+
+    private fun observeCollectionsCount() {
+        val userEmail = auth.currentUser?.email ?: return
+        repository.fetchUserCollections(userEmail) { collections ->
+            val filteredCollections = collections.filter { collection ->
+                forbiddenNames.none { forbidden ->
+                    collection.CollectionName.contains(forbidden, ignoreCase = true)
+                }
+            }
+            _uiState.update { it.copy(collectionsCount = filteredCollections.size) }
         }
     }
 
@@ -128,19 +164,15 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         val currentUser = auth.currentUser
         
         if (currentUser != null) {
-            val userEmail = currentUser.email ?: ""
+            val userEmail = currentUser.email ?: "blackpama110821@gmail.com" // Ưu tiên email đang login
             _uiState.update { it.copy(email = userEmail) }
 
-            repository.getUserProfile(userEmail) { name, username, _ ->
-                // Tự động tạo URL ảnh ngẫu nhiên dựa trên thời gian hiện tại (phiên đăng nhập)
-                // Ảnh này sẽ giữ nguyên trong suốt vòng đời của ViewModel này
-                val randomAvatarUrl = "https://picsum.photos/seed/${userEmail}_${System.currentTimeMillis()}/200"
-                
+            repository.getUserProfile(userEmail) { name, username, avatarUrl ->
                 _uiState.update {
                     it.copy(
-                        name = name,
-                        username = if (username.isNotEmpty()) "@$username" else it.username,
-                        avatar = randomAvatarUrl
+                        name = if (name.isNotEmpty()) name else "Người dùng",
+                        username = if (username.isNotEmpty()) "@$username" else "@user",
+                        avatar = if (avatarUrl.isNotEmpty()) avatarUrl else "https://picsum.photos/seed/$userEmail/200"
                     )
                 }
             }

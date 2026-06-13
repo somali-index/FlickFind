@@ -2,6 +2,7 @@ package com.example.flickfind.DATALAYER.DAO
 
 import androidx.room.*
 import com.example.flickfind.DATALAYER.Room.*
+import kotlinx.coroutines.flow.Flow
 
 
 data class MovieWithGenres(
@@ -38,6 +39,9 @@ interface DAOMovie {
     @Query("SELECT * FROM movieData")
     suspend fun getAllMovies(): List<RoomMovies>
 
+    @Query("SELECT * FROM movieData")
+    fun getAllMoviesFlow(): Flow<List<RoomMovies>>
+
     @Delete
     suspend fun deleteMovie(movie: RoomMovies)
 
@@ -70,4 +74,14 @@ interface DAOMovie {
     //  XÓA DL
     @Query("DELETE FROM movieData")
     suspend fun clearAll()
+
+    // CÁC HÀM CHO USER (LOCAL)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUser(user: RoomUser)
+
+    @Query("SELECT * FROM users LIMIT 1")
+    suspend fun getLocalUser(): RoomUser?
+
+    @Query("DELETE FROM users")
+    suspend fun clearLocalUser()
 }
