@@ -25,12 +25,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.flickfind.DATALAYER.DataClass.DataMovie
+import com.example.flickfind.ui.common.LoadingDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(
     movieId: String,
     onBackClick: () -> Unit,
+    onUnderDevelopmentClick: () -> Unit,
     viewModel: MovieDetailViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -92,7 +94,7 @@ fun MovieDetailScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* Share functionality if needed */ }) {
+                    IconButton(onClick = onUnderDevelopmentClick) {
                         Icon(Icons.Default.Share, contentDescription = "Share")
                     }
                     IconButton(onClick = { 
@@ -183,12 +185,12 @@ fun MovieDetailScreen(
 
                 // Nút xem phim giả định
                 Button(
-                    onClick = { /* Play movie */ },
+                    onClick = onUnderDevelopmentClick,
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E5FF)),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("XEM NGAY", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text("XEM LỊCH CHIẾU", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
 
                 Spacer(modifier = Modifier.height(40.dp))
@@ -215,6 +217,11 @@ fun MovieDetailScreen(
             }
         )
     }
+
+    LoadingDialog(
+        visible = uiState.isSlowLoading,
+        message = "Thao tác đang mất nhiều thời gian hơn bình thường..."
+    )
 }
 
 @Composable

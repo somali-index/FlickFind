@@ -106,14 +106,12 @@ public class DAOMovie_Impl(
     }
     this.__insertAdapterOfRoomUser = object : EntityInsertAdapter<RoomUser>() {
       protected override fun createQuery(): String =
-          "INSERT OR REPLACE INTO `userData` (`IDUser`,`Email`,`Pass`,`UserName`,`avatar`) VALUES (?,?,?,?,?)"
+          "INSERT OR REPLACE INTO `users` (`Email`,`UserName`,`avatar`) VALUES (?,?,?)"
 
       protected override fun bind(statement: SQLiteStatement, entity: RoomUser) {
-        statement.bindText(1, entity.IDUser)
-        statement.bindText(2, entity.Email)
-        statement.bindText(3, entity.Pass)
-        statement.bindText(4, entity.UserName)
-        statement.bindText(5, entity.avatar)
+        statement.bindText(1, entity.Email)
+        statement.bindText(2, entity.UserName)
+        statement.bindText(3, entity.avatar)
       }
     }
     this.__deleteAdapterOfRoomMovies = object : EntityDeleteOrUpdateAdapter<RoomMovies>() {
@@ -165,9 +163,9 @@ public class DAOMovie_Impl(
     __deleteAdapterOfRoomMovies.handle(_connection, movie)
   }
 
-  public override fun getAllMoviesFlow(): Flow<List<RoomMovies>> {
+  public override suspend fun getAllMovies(): List<RoomMovies> {
     val _sql: String = "SELECT * FROM movieData"
-    return createFlow(__db, false, arrayOf("movieData")) { _connection ->
+    return performSuspending(__db, true, false) { _connection ->
       val _stmt: SQLiteStatement = _connection.prepare(_sql)
       try {
         val _cursorIndexOfIDMovie: Int = getColumnIndexOrThrow(_stmt, "IDMovie")
@@ -205,9 +203,9 @@ public class DAOMovie_Impl(
     }
   }
 
-  public override suspend fun getAllMovies(): List<RoomMovies> {
+  public override fun getAllMoviesFlow(): Flow<List<RoomMovies>> {
     val _sql: String = "SELECT * FROM movieData"
-    return performSuspending(__db, true, false) { _connection ->
+    return createFlow(__db, false, arrayOf("movieData")) { _connection ->
       val _stmt: SQLiteStatement = _connection.prepare(_sql)
       try {
         val _cursorIndexOfIDMovie: Int = getColumnIndexOrThrow(_stmt, "IDMovie")
@@ -421,29 +419,23 @@ public class DAOMovie_Impl(
     }
   }
 
-  public override suspend fun getUser(): RoomUser? {
-    val _sql: String = "SELECT * FROM userData LIMIT 1"
+  public override suspend fun getLocalUser(): RoomUser? {
+    val _sql: String = "SELECT * FROM users LIMIT 1"
     return performSuspending(__db, true, false) { _connection ->
       val _stmt: SQLiteStatement = _connection.prepare(_sql)
       try {
-        val _cursorIndexOfIDUser: Int = getColumnIndexOrThrow(_stmt, "IDUser")
         val _cursorIndexOfEmail: Int = getColumnIndexOrThrow(_stmt, "Email")
-        val _cursorIndexOfPass: Int = getColumnIndexOrThrow(_stmt, "Pass")
         val _cursorIndexOfUserName: Int = getColumnIndexOrThrow(_stmt, "UserName")
         val _cursorIndexOfAvatar: Int = getColumnIndexOrThrow(_stmt, "avatar")
         val _result: RoomUser?
         if (_stmt.step()) {
-          val _tmpIDUser: String
-          _tmpIDUser = _stmt.getText(_cursorIndexOfIDUser)
           val _tmpEmail: String
           _tmpEmail = _stmt.getText(_cursorIndexOfEmail)
-          val _tmpPass: String
-          _tmpPass = _stmt.getText(_cursorIndexOfPass)
           val _tmpUserName: String
           _tmpUserName = _stmt.getText(_cursorIndexOfUserName)
           val _tmpAvatar: String
           _tmpAvatar = _stmt.getText(_cursorIndexOfAvatar)
-          _result = RoomUser(_tmpIDUser,_tmpEmail,_tmpPass,_tmpUserName,_tmpAvatar)
+          _result = RoomUser(_tmpEmail,_tmpUserName,_tmpAvatar)
         } else {
           _result = null
         }
@@ -466,8 +458,8 @@ public class DAOMovie_Impl(
     }
   }
 
-  public override suspend fun clearUser() {
-    val _sql: String = "DELETE FROM userData"
+  public override suspend fun clearLocalUser() {
+    val _sql: String = "DELETE FROM users"
     return performSuspending(__db, false, true) { _connection ->
       val _stmt: SQLiteStatement = _connection.prepare(_sql)
       try {

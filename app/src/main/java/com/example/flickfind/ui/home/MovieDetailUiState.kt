@@ -6,6 +6,7 @@ import com.example.flickfind.DATALAYER.DataClass.DataMovie
 data class MovieDetailUiState(
     val movie: DataMovie? = null,
     val isLoading: Boolean = true,
+    val isSlowLoading: Boolean = false,
     val isSaved: Boolean = false,
     val savedMovieIds: Set<String> = emptySet(),
     val collections: List<DataCollection> = emptyList(),

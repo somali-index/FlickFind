@@ -7,7 +7,8 @@ import com.example.flickfind.DATALAYER.AppRepository.Repository
 import com.example.flickfind.DATALAYER.DataClass.DataMovie
 import com.example.flickfind.DATALAYER.Remote.AppRemote
 import com.example.flickfind.DATALAYER.Room.AppDatabase
-import com.example.flickfind.DATALAYER.Room.RoomUser
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -21,18 +22,10 @@ class MovieDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     private val _uiState = MutableStateFlow(MovieDetailUiState())
     val uiState = _uiState.asStateFlow()
-
-    private var currentUser: RoomUser? = null
+    private var slowLoadingJob: Job? = null
 
     init {
-        loadCurrentUser()
         observeSavedMovies()
-    }
-
-    private fun loadCurrentUser() {
-        viewModelScope.launch {
-            currentUser = repository.getLocalUser()
-        }
     }
 
     private fun observeSavedMovies() {
@@ -70,35 +63,55 @@ class MovieDetailViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun saveMovieToAccount(movie: DataMovie) {
-        val email = currentUser?.Email ?: return
-        repository.saveMovieToAccount(email, movie) { success ->
-            if (success) {
-                _uiState.update { it.copy(userMessage = "Đã đồng bộ '${movie.NameMovie}' vào tài khoản") }
+        startSlowLoadingTimer()
+        repository.saveCurrentUserMovieToAccount(movie) { success ->
+            stopSlowLoadingTimer()
+            val message = if (success) {
+                "Đã đồng bộ '${movie.NameMovie}' vào tài khoản"
             } else {
-                _uiState.update { it.copy(userMessage = "Lỗi khi đồng bộ vào tài khoản") }
+                "Lỗi khi đồng bộ vào tài khoản"
             }
+            _uiState.update { it.copy(userMessage = message) }
         }
     }
 
     fun saveMovieToCollection(movie: DataMovie, collectionName: String) {
-        val email = currentUser?.Email ?: return
-        repository.saveMovieToFirestore(email, movie, collectionName) { success ->
-            if (success) {
-                _uiState.update { it.copy(userMessage = "Đã lưu vào bộ sưu tập $collectionName") }
+        startSlowLoadingTimer()
+        repository.saveCurrentUserMovieToCollection(movie, collectionName) { success ->
+            stopSlowLoadingTimer()
+            val message = if (success) {
+                "Đã lưu vào bộ sưu tập $collectionName"
             } else {
-                _uiState.update { it.copy(userMessage = "Lỗi khi lưu vào bộ sưu tập") }
+                "Lỗi khi lưu vào bộ sưu tập"
             }
+            _uiState.update { it.copy(userMessage = message) }
         }
     }
 
     fun fetchUserCollections() {
-        val email = currentUser?.Email ?: return
-        repository.fetchUserCollections(email) { collections ->
+        startSlowLoadingTimer()
+        repository.fetchCurrentUserCollections { collections ->
+            stopSlowLoadingTimer()
             _uiState.update { it.copy(collections = collections) }
         }
     }
 
     fun clearMessage() {
         _uiState.update { it.copy(userMessage = null) }
+    }
+
+    private fun startSlowLoadingTimer() {
+        slowLoadingJob?.cancel()
+        _uiState.update { it.copy(isSlowLoading = false) }
+        slowLoadingJob = viewModelScope.launch {
+            delay(3000)
+            _uiState.update { it.copy(isSlowLoading = true) }
+        }
+    }
+
+    private fun stopSlowLoadingTimer() {
+        slowLoadingJob?.cancel()
+        slowLoadingJob = null
+        _uiState.update { it.copy(isSlowLoading = false) }
     }
 }

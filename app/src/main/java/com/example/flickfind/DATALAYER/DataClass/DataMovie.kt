@@ -10,12 +10,15 @@ data class DataMovie(
     val IDStudio: String = "",
     val NameMovie: String = "",
     val URLimage: String = "",
+
     val TimeOneEP: String = "",
-    val NummberEP: String = ""
+    val NummberEP: String = "",
+
+    val Category: String = "",
+    val Studio: String = "",
+    val Year: String = ""
 )
 
 object ListMovieDataSource {
-
     var movieList by mutableStateOf<List<DataMovie>>(emptyList())
-
 }

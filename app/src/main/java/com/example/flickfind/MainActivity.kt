@@ -13,12 +13,18 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.flickfind.DATALAYER.Remote.AppRemote
 import com.example.flickfind.ui.Navigation.AuthRoute
+import com.example.flickfind.ui.Navigation.AboutRoute
+import com.example.flickfind.ui.Navigation.DataToolsRoute
 import com.example.flickfind.ui.Navigation.HomeRoute
 import com.example.flickfind.ui.Navigation.ProfileRoute
 import com.example.flickfind.ui.Navigation.SavedMoviesRoute
+import com.example.flickfind.ui.Navigation.StatisticsRoute
 import com.example.flickfind.ui.Navigation.MovieDetailRoute
 import com.example.flickfind.ui.auth.AuthScreen
 import com.example.flickfind.ui.home.HomeScreen
+import com.example.flickfind.ui.info.AboutScreen
+import com.example.flickfind.ui.info.DataToolsScreen
+import com.example.flickfind.ui.info.StatisticsScreen
 import com.example.flickfind.ui.theme.FlickFindTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.example.flickfind.ui.Navigation.UnderDevelopmentRoute
@@ -142,7 +148,8 @@ fun FlickFindApp() {
             val route: MovieDetailRoute = backStackEntry.toRoute()
             com.example.flickfind.ui.home.MovieDetailScreen(
                 movieId = route.movieId,
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onUnderDevelopmentClick = { navController.navigate(UnderDevelopmentRoute) }
             )
         }
 
@@ -167,6 +174,15 @@ fun FlickFindApp() {
                 },
                 onUnderDevelopmentClick = {
                     navController.navigate(UnderDevelopmentRoute)
+                },
+                onAboutClick = {
+                    navController.navigate(AboutRoute)
+                },
+                onStatisticsClick = {
+                    navController.navigate(StatisticsRoute)
+                },
+                onDataToolsClick = {
+                    navController.navigate(DataToolsRoute)
                 }
             )
         }
@@ -213,6 +229,18 @@ fun FlickFindApp() {
                     navController.popBackStack()
                 }
             )
+        }
+
+        composable<AboutRoute> {
+            AboutScreen(onBack = { navController.popBackStack() })
+        }
+
+        composable<StatisticsRoute> {
+            StatisticsScreen(onBack = { navController.popBackStack() })
+        }
+
+        composable<DataToolsRoute> {
+            DataToolsScreen(onBack = { navController.popBackStack() })
         }
     }
 }

@@ -1,10 +1,26 @@
 package com.example.flickfind.ui.common
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +47,7 @@ fun UnderDevelopmentScreen(onBack: () -> Unit) {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Quay lại"
                         )
                     }
                 }
@@ -62,7 +78,7 @@ fun UnderDevelopmentScreen(onBack: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Chúng tôi đang nỗ lực hoàn thiện tính năng này. Vui lòng quay lại sau!",
+                text = "Chúng tôi đang hoàn thiện tính năng này. Vui lòng quay lại sau!",
                 color = Color.Gray,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
@@ -71,8 +87,10 @@ fun UnderDevelopmentScreen(onBack: () -> Unit) {
             Button(
                 onClick = onBack,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E5FF)),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
             ) {
                 Text(
                     text = "QUAY LẠI",

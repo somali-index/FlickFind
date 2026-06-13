@@ -26,3 +26,12 @@ object UnderDevelopmentRoute
 
 @Serializable
 data class MovieDetailRoute(val movieId: String)
+
+@Serializable
+object AboutRoute
+
+@Serializable
+object StatisticsRoute
+
+@Serializable
+object DataToolsRoute

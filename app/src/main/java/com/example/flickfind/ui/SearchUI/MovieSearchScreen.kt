@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.flickfind.DATALAYER.DataClass.DataMovie
+import com.example.flickfind.ui.common.LoadingDialog
 import com.example.flickfind.ui.home.SaveOptionsBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,6 +151,11 @@ fun MovieSearchScreen(
             }
         )
     }
+
+    LoadingDialog(
+        visible = uiState.isSlowLoading,
+        message = "Thao tác đang mất nhiều thời gian hơn bình thường..."
+    )
 }
 
 @Composable

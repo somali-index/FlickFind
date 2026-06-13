@@ -36,16 +36,16 @@ public class AppDatabase_Impl : AppDatabase() {
 
   protected override fun createOpenDelegate(): RoomOpenDelegate {
     val _openDelegate: RoomOpenDelegate = object : RoomOpenDelegate(2,
-        "094510013d282fd6e2b352b21b3c8dda", "55a6b5d5deceddce8e59e233c41818c1") {
+        "a9778580a46dacb1d1eba5b9e3be3284", "2148624599c24297ef658c8d56b9a29e") {
       public override fun createAllTables(connection: SQLiteConnection) {
         connection.execSQL("CREATE TABLE IF NOT EXISTS `movieData` (`IDMovie` TEXT NOT NULL, `NameMovie` TEXT NOT NULL, `Description` TEXT NOT NULL, `IDStudio` TEXT NOT NULL, `URLimage` TEXT NOT NULL, `TimeOneEP` TEXT NOT NULL, `NummberEP` TEXT NOT NULL, PRIMARY KEY(`IDMovie`))")
         connection.execSQL("CREATE TABLE IF NOT EXISTS `movieGenre` (`GenreID` TEXT NOT NULL, `GenreName` TEXT NOT NULL, `description` TEXT NOT NULL, PRIMARY KEY(`GenreID`))")
         connection.execSQL("CREATE TABLE IF NOT EXISTS `studioData` (`IDStudio` TEXT NOT NULL, `StudioName` TEXT NOT NULL, PRIMARY KEY(`IDStudio`))")
         connection.execSQL("CREATE TABLE IF NOT EXISTS `Genre_Movie` (`GenreID` TEXT NOT NULL, `IDMovie` TEXT NOT NULL, PRIMARY KEY(`GenreID`, `IDMovie`))")
         connection.execSQL("CREATE TABLE IF NOT EXISTS `Studio_Movie` (`IDStudio` TEXT NOT NULL, `IDMovie` TEXT NOT NULL, PRIMARY KEY(`IDStudio`, `IDMovie`))")
-        connection.execSQL("CREATE TABLE IF NOT EXISTS `userData` (`IDUser` TEXT NOT NULL, `Email` TEXT NOT NULL, `Pass` TEXT NOT NULL, `UserName` TEXT NOT NULL, `avatar` TEXT NOT NULL, PRIMARY KEY(`IDUser`))")
+        connection.execSQL("CREATE TABLE IF NOT EXISTS `users` (`Email` TEXT NOT NULL, `UserName` TEXT NOT NULL, `avatar` TEXT NOT NULL, PRIMARY KEY(`Email`))")
         connection.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)")
-        connection.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '094510013d282fd6e2b352b21b3c8dda')")
+        connection.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a9778580a46dacb1d1eba5b9e3be3284')")
       }
 
       public override fun dropAllTables(connection: SQLiteConnection) {
@@ -54,7 +54,7 @@ public class AppDatabase_Impl : AppDatabase() {
         connection.execSQL("DROP TABLE IF EXISTS `studioData`")
         connection.execSQL("DROP TABLE IF EXISTS `Genre_Movie`")
         connection.execSQL("DROP TABLE IF EXISTS `Studio_Movie`")
-        connection.execSQL("DROP TABLE IF EXISTS `userData`")
+        connection.execSQL("DROP TABLE IF EXISTS `users`")
       }
 
       public override fun onCreate(connection: SQLiteConnection) {
@@ -180,30 +180,26 @@ public class AppDatabase_Impl : AppDatabase() {
               | Found:
               |""".trimMargin() + _existingStudioMovie)
         }
-        val _columnsUserData: MutableMap<String, TableInfo.Column> = mutableMapOf()
-        _columnsUserData.put("IDUser", TableInfo.Column("IDUser", "TEXT", true, 1, null,
+        val _columnsUsers: MutableMap<String, TableInfo.Column> = mutableMapOf()
+        _columnsUsers.put("Email", TableInfo.Column("Email", "TEXT", true, 1, null,
             TableInfo.CREATED_FROM_ENTITY))
-        _columnsUserData.put("Email", TableInfo.Column("Email", "TEXT", true, 0, null,
+        _columnsUsers.put("UserName", TableInfo.Column("UserName", "TEXT", true, 0, null,
             TableInfo.CREATED_FROM_ENTITY))
-        _columnsUserData.put("Pass", TableInfo.Column("Pass", "TEXT", true, 0, null,
+        _columnsUsers.put("avatar", TableInfo.Column("avatar", "TEXT", true, 0, null,
             TableInfo.CREATED_FROM_ENTITY))
-        _columnsUserData.put("UserName", TableInfo.Column("UserName", "TEXT", true, 0, null,
-            TableInfo.CREATED_FROM_ENTITY))
-        _columnsUserData.put("avatar", TableInfo.Column("avatar", "TEXT", true, 0, null,
-            TableInfo.CREATED_FROM_ENTITY))
-        val _foreignKeysUserData: MutableSet<TableInfo.ForeignKey> = mutableSetOf()
-        val _indicesUserData: MutableSet<TableInfo.Index> = mutableSetOf()
-        val _infoUserData: TableInfo = TableInfo("userData", _columnsUserData, _foreignKeysUserData,
-            _indicesUserData)
-        val _existingUserData: TableInfo = read(connection, "userData")
-        if (!_infoUserData.equals(_existingUserData)) {
+        val _foreignKeysUsers: MutableSet<TableInfo.ForeignKey> = mutableSetOf()
+        val _indicesUsers: MutableSet<TableInfo.Index> = mutableSetOf()
+        val _infoUsers: TableInfo = TableInfo("users", _columnsUsers, _foreignKeysUsers,
+            _indicesUsers)
+        val _existingUsers: TableInfo = read(connection, "users")
+        if (!_infoUsers.equals(_existingUsers)) {
           return RoomOpenDelegate.ValidationResult(false, """
-              |userData(com.example.flickfind.DATALAYER.Room.RoomUser).
+              |users(com.example.flickfind.DATALAYER.Room.RoomUser).
               | Expected:
-              |""".trimMargin() + _infoUserData + """
+              |""".trimMargin() + _infoUsers + """
               |
               | Found:
-              |""".trimMargin() + _existingUserData)
+              |""".trimMargin() + _existingUsers)
         }
         return RoomOpenDelegate.ValidationResult(true, null)
       }
@@ -215,12 +211,12 @@ public class AppDatabase_Impl : AppDatabase() {
     val _shadowTablesMap: MutableMap<String, String> = mutableMapOf()
     val _viewTables: MutableMap<String, Set<String>> = mutableMapOf()
     return InvalidationTracker(this, _shadowTablesMap, _viewTables, "movieData", "movieGenre",
-        "studioData", "Genre_Movie", "Studio_Movie", "userData")
+        "studioData", "Genre_Movie", "Studio_Movie", "users")
   }
 
   public override fun clearAllTables() {
     super.performClear(false, "movieData", "movieGenre", "studioData", "Genre_Movie",
-        "Studio_Movie", "userData")
+        "Studio_Movie", "users")
   }
 
   protected override fun getRequiredTypeConverterClasses(): Map<KClass<*>, List<KClass<*>>> {

@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.flickfind.DATALAYER.DataClass.DataCollection
 import com.example.flickfind.DATALAYER.DataClass.DataMovie
 import com.example.flickfind.ui.SearchUI.SearchActivity
+import com.example.flickfind.ui.common.LoadingDialog
 import com.example.flickfind.ui.theme.FlickFindTheme
 import kotlinx.coroutines.launch
 
@@ -132,6 +133,11 @@ private fun HomeScreenBody(
             }
         )
     }
+
+    LoadingDialog(
+        visible = uiState.isSlowLoading,
+        message = "Thao tác đang mất nhiều thời gian hơn bình thường..."
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -38,6 +38,9 @@ fun ProfileScreen(
     onCollectionsClick: () -> Unit,
     onLogout: () -> Unit,
     onUnderDevelopmentClick: () -> Unit,
+    onAboutClick: () -> Unit,
+    onStatisticsClick: () -> Unit,
+    onDataToolsClick: () -> Unit,
     viewModel: ProfileViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -58,6 +61,9 @@ fun ProfileScreen(
         onCollectionsClick = onCollectionsClick,
         onLogout = onLogout,
         onUnderDevelopmentClick = onUnderDevelopmentClick,
+        onAboutClick = onAboutClick,
+        onStatisticsClick = onStatisticsClick,
+        onDataToolsClick = onDataToolsClick,
         onShowChangeName = { viewModel.showChangeNameDialog(true) },
         onDismissChangeName = { viewModel.showChangeNameDialog(false) },
         onChangeName = { viewModel.updateName(it) },
@@ -80,6 +86,9 @@ fun ProfileScreenContent(
     onCollectionsClick: () -> Unit,
     onLogout: () -> Unit,
     onUnderDevelopmentClick: () -> Unit,
+    onAboutClick: () -> Unit,
+    onStatisticsClick: () -> Unit,
+    onDataToolsClick: () -> Unit,
     onShowChangeName: () -> Unit,
     onDismissChangeName: () -> Unit,
     onChangeName: (String) -> Unit,
@@ -217,6 +226,9 @@ fun ProfileScreenContent(
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color(0xFF1A1A1A))
                 ) {
+                    MenuItem(icon = Icons.Default.Info, title = "Gioi thieu ung dung", onClick = onAboutClick)
+                    MenuItem(icon = Icons.Default.BarChart, title = "Thong ke du lieu", onClick = onStatisticsClick)
+                    MenuItem(icon = Icons.Default.ImportExport, title = "Xuat / nhap JSON", onClick = onDataToolsClick)
                     MenuItem(icon = Icons.Default.Lock, title = "Đổi mật khẩu", onClick = onShowChangePassword)
                     MenuItem(icon = Icons.Default.Favorite, title = "Thể Loại Yêu Thích", onClick = onUnderDevelopmentClick)
                     MenuItem(icon = Icons.Default.History, title = "Lịch Sử Tìm Kiếm", onClick = onUnderDevelopmentClick)
@@ -541,6 +553,9 @@ fun ProfileScreenPreview() {
             onCollectionsClick = {},
             onLogout = {},
             onUnderDevelopmentClick = {},
+            onAboutClick = {},
+            onStatisticsClick = {},
+            onDataToolsClick = {},
             onShowChangeName = {},
             onDismissChangeName = {},
             onChangeName = {},
