@@ -16,6 +16,12 @@ object ProfileRoute
 object SavedMoviesRoute
 
 @Serializable
+object CollectionsRoute
+
+@Serializable
+data class CollectionDetailRoute(val id: String, val name: String)
+
+@Serializable
 object UnderDevelopmentRoute
 
 @Serializable

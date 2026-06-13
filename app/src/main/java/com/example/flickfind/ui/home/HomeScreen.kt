@@ -10,10 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,10 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.flickfind.DATALAYER.DataClass.DataMovie
+import com.example.flickfind.DATALAYER.DataClass.DataCollection
 import com.example.flickfind.ui.SearchUI.SearchActivity
-import com.example.flickfind.ui.theme.FlickFindTheme
 
 @Composable
 fun HomeScree(
@@ -44,13 +40,9 @@ fun HomeScree(
     val uiState by viewModel.homeUiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Xử lý hiển thị thông báo qua Snackbar
     LaunchedEffect(uiState.userMessage) {
         uiState.userMessage?.let { message ->
-            snackbarHostState.showSnackbar(
-                message = message,
-                duration = SnackbarDuration.Short
-            )
+            snackbarHostState.showSnackbar(message = message, duration = SnackbarDuration.Short)
             viewModel.clearMessage()
         }
     }
@@ -64,9 +56,9 @@ fun HomeScree(
         onSearchClick = {
             context.startActivity(Intent(context, SearchActivity::class.java))
         },
-        onSaveClick = { movie ->
-            viewModel.saveMovie(movie)
-        },
+        onSaveClick = { movie -> viewModel.saveMovie(movie) },
+        onSaveToCollection = { movie, id, name -> viewModel.saveMovieToCollection(movie, id, name) },
+        onFetchCollections = { viewModel.fetchUserCollections() },
         onMovieClick = onMovieClick
     )
 }
@@ -81,9 +73,12 @@ private fun HomeScreeContent(
     onSettingsClick: () -> Unit,
     onSearchClick: () -> Unit,
     onSaveClick: (DataMovie) -> Unit,
+    onSaveToCollection: (DataMovie, String, String) -> Unit,
+    onFetchCollections: () -> Unit,
     onMovieClick: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
+    var selectedMovieForSave by remember { mutableStateOf<DataMovie?>(null) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -114,6 +109,17 @@ private fun HomeScreeContent(
             )
         }
     ) { paddingValues ->
+        selectedMovieForSave?.let { movie ->
+            SaveMovieDialog(
+                movie = movie,
+                collections = uiState.collections,
+                onDismiss = { selectedMovieForSave = null },
+                onQuickSave = { onSaveClick(movie) },
+                onSaveToCollection = { colId, colName -> onSaveToCollection(movie, colId, colName) },
+                onFetchCollections = onFetchCollections
+            )
+        }
+
         if (uiState.isLoading) {
             Box(Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
@@ -124,8 +130,8 @@ private fun HomeScreeContent(
                 contentPadding = PaddingValues(bottom = 24.dp)
             ) {
                 item { HomeHeader() }
-                item { MovieSection("🎬 Danh sách phim", uiState.movieList, onSaveClick, onMovieClick) }
-                item { MovieSection("🎬 Phim hot", uiState.movieList, onSaveClick, onMovieClick) }
+                item { MovieSection("🎬 Danh sách phim", uiState.movieList, { selectedMovieForSave = it }, onMovieClick) }
+                item { MovieSection("🎬 Phim hot", uiState.movieList, { selectedMovieForSave = it }, onMovieClick) }
             }
         }
     }
@@ -171,4 +177,85 @@ fun MovieCard(movie: DataMovie, onSaveClick: () -> Unit, onMovieClick: () -> Uni
         Text(movie.NameMovie, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium, maxLines = 2, overflow = TextOverflow.Ellipsis)
         Text(movie.Description, color = Color.Gray, fontSize = 11.sp, maxLines = 1)
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SaveMovieDialog(
+    movie: DataMovie,
+    collections: List<DataCollection>,
+    onDismiss: () -> Unit,
+    onQuickSave: () -> Unit,
+    onSaveToCollection: (String, String) -> Unit,
+    onFetchCollections: () -> Unit
+) {
+    var showCollectionList by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = Color(0xFF1A1A1A),
+        title = {
+            Text(
+                text = if (showCollectionList) "Chọn bộ sưu tập" else "Lưu phim",
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                if (!showCollectionList) {
+                    ListItem(
+                        headlineContent = { Text("Lưu nhanh", color = Color.White) },
+                        supportingContent = { Text("Lưu vào danh sách mặc định", color = Color.Gray) },
+                        leadingContent = { Icon(Icons.Default.Bookmark, null, tint = Color(0xFF00E5FF)) },
+                        modifier = Modifier.clickable { onQuickSave(); onDismiss() },
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                    )
+                    ListItem(
+                        headlineContent = { Text("Lưu vào bộ sưu tập", color = Color.White) },
+                        supportingContent = { Text("Chọn một bộ sưu tập cụ thể", color = Color.Gray) },
+                        leadingContent = { Icon(Icons.Default.Folder, null, tint = Color(0xFF00E5FF)) },
+                        modifier = Modifier.clickable { onFetchCollections(); showCollectionList = true },
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                    )
+                } else {
+                    if (collections.isEmpty()) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
+                            Text("Chưa có bộ sưu tập nào", color = Color.Gray)
+                            Spacer(Modifier.height(8.dp))
+                            Button(onClick = { /* Chức năng tạo mới chưa làm */ }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E5FF))) {
+                                Text("Tạo mới", color = Color.Black)
+                            }
+                        }
+                    } else {
+                        LazyColumn(modifier = Modifier.heightIn(max = 300.dp)) {
+                            items(collections) { collection ->
+                                ListItem(
+                                    headlineContent = { Text(collection.CollectionName, color = Color.White) },
+                                    leadingContent = { Icon(Icons.Default.Folder, null, tint = Color(0xFF00E5FF)) },
+                                    modifier = Modifier.clickable { onSaveToCollection(collection.IDCollection, collection.CollectionName); onDismiss() },
+                                    colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                                )
+                            }
+                            item {
+                                TextButton(onClick = { /* Chức năng tạo mới chưa làm */ }, modifier = Modifier.fillMaxWidth()) {
+                                    Icon(Icons.Default.Add, null, tint = Color(0xFF00E5FF))
+                                    Spacer(Modifier.width(8.dp))
+                                    Text("Tạo bộ sưu tập mới", color = Color(0xFF00E5FF))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            if (showCollectionList) {
+                TextButton(onClick = { showCollectionList = false }) { Text("Quay lại", color = Color(0xFF00E5FF)) }
+            } else {
+                TextButton(onClick = onDismiss) { Text("Hủy", color = Color.Gray) }
+            }
+        }
+    )
 }

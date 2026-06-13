@@ -73,4 +73,14 @@ interface DAOMovie {
     // --- XÓA DỮ LIỆU ---
     @Query("DELETE FROM movieData")
     suspend fun clearAll()
+
+    // --- CÁC HÀM CHO NGƯỜI DÙNG ---
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUser(user: RoomUser)
+
+    @Query("SELECT * FROM userData LIMIT 1")
+    suspend fun getUser(): RoomUser?
+
+    @Query("DELETE FROM userData")
+    suspend fun clearUser()
 }

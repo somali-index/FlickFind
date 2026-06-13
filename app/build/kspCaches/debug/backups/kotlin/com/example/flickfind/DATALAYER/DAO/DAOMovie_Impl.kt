@@ -16,6 +16,7 @@ import com.example.flickfind.DATALAYER.Room.MovieStudioCrossRef
 import com.example.flickfind.DATALAYER.Room.RoomGenre
 import com.example.flickfind.DATALAYER.Room.RoomMovies
 import com.example.flickfind.DATALAYER.Room.RoomStudio
+import com.example.flickfind.DATALAYER.Room.RoomUser
 import javax.`annotation`.processing.Generated
 import kotlin.Int
 import kotlin.String
@@ -45,6 +46,8 @@ public class DAOMovie_Impl(
   private val __insertAdapterOfMovieGenreCrossRef: EntityInsertAdapter<MovieGenreCrossRef>
 
   private val __insertAdapterOfMovieStudioCrossRef: EntityInsertAdapter<MovieStudioCrossRef>
+
+  private val __insertAdapterOfRoomUser: EntityInsertAdapter<RoomUser>
 
   private val __deleteAdapterOfRoomMovies: EntityDeleteOrUpdateAdapter<RoomMovies>
   init {
@@ -101,6 +104,18 @@ public class DAOMovie_Impl(
         statement.bindText(2, entity.IDMovie)
       }
     }
+    this.__insertAdapterOfRoomUser = object : EntityInsertAdapter<RoomUser>() {
+      protected override fun createQuery(): String =
+          "INSERT OR REPLACE INTO `userData` (`IDUser`,`Email`,`Pass`,`UserName`,`avatar`) VALUES (?,?,?,?,?)"
+
+      protected override fun bind(statement: SQLiteStatement, entity: RoomUser) {
+        statement.bindText(1, entity.IDUser)
+        statement.bindText(2, entity.Email)
+        statement.bindText(3, entity.Pass)
+        statement.bindText(4, entity.UserName)
+        statement.bindText(5, entity.avatar)
+      }
+    }
     this.__deleteAdapterOfRoomMovies = object : EntityDeleteOrUpdateAdapter<RoomMovies>() {
       protected override fun createQuery(): String = "DELETE FROM `movieData` WHERE `IDMovie` = ?"
 
@@ -138,6 +153,11 @@ public class DAOMovie_Impl(
   public override suspend fun insertMovieStudioCrossRef(crossRef: MovieStudioCrossRef): Unit =
       performSuspending(__db, false, true) { _connection ->
     __insertAdapterOfMovieStudioCrossRef.insert(_connection, crossRef)
+  }
+
+  public override suspend fun insertUser(user: RoomUser): Unit = performSuspending(__db, false,
+      true) { _connection ->
+    __insertAdapterOfRoomUser.insert(_connection, user)
   }
 
   public override suspend fun deleteMovie(movie: RoomMovies): Unit = performSuspending(__db, false,
@@ -401,8 +421,53 @@ public class DAOMovie_Impl(
     }
   }
 
+  public override suspend fun getUser(): RoomUser? {
+    val _sql: String = "SELECT * FROM userData LIMIT 1"
+    return performSuspending(__db, true, false) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
+      try {
+        val _cursorIndexOfIDUser: Int = getColumnIndexOrThrow(_stmt, "IDUser")
+        val _cursorIndexOfEmail: Int = getColumnIndexOrThrow(_stmt, "Email")
+        val _cursorIndexOfPass: Int = getColumnIndexOrThrow(_stmt, "Pass")
+        val _cursorIndexOfUserName: Int = getColumnIndexOrThrow(_stmt, "UserName")
+        val _cursorIndexOfAvatar: Int = getColumnIndexOrThrow(_stmt, "avatar")
+        val _result: RoomUser?
+        if (_stmt.step()) {
+          val _tmpIDUser: String
+          _tmpIDUser = _stmt.getText(_cursorIndexOfIDUser)
+          val _tmpEmail: String
+          _tmpEmail = _stmt.getText(_cursorIndexOfEmail)
+          val _tmpPass: String
+          _tmpPass = _stmt.getText(_cursorIndexOfPass)
+          val _tmpUserName: String
+          _tmpUserName = _stmt.getText(_cursorIndexOfUserName)
+          val _tmpAvatar: String
+          _tmpAvatar = _stmt.getText(_cursorIndexOfAvatar)
+          _result = RoomUser(_tmpIDUser,_tmpEmail,_tmpPass,_tmpUserName,_tmpAvatar)
+        } else {
+          _result = null
+        }
+        _result
+      } finally {
+        _stmt.close()
+      }
+    }
+  }
+
   public override suspend fun clearAll() {
     val _sql: String = "DELETE FROM movieData"
+    return performSuspending(__db, false, true) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
+      try {
+        _stmt.step()
+      } finally {
+        _stmt.close()
+      }
+    }
+  }
+
+  public override suspend fun clearUser() {
+    val _sql: String = "DELETE FROM userData"
     return performSuspending(__db, false, true) { _connection ->
       val _stmt: SQLiteStatement = _connection.prepare(_sql)
       try {

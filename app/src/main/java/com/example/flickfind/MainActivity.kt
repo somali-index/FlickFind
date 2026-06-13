@@ -15,6 +15,7 @@ import com.example.flickfind.ui.Navigation.AuthRoute
 import com.example.flickfind.ui.Navigation.HomeRoute
 import com.example.flickfind.ui.Navigation.ProfileRoute
 import com.example.flickfind.ui.Navigation.SavedMoviesRoute
+import com.example.flickfind.ui.Navigation.CollectionsRoute
 import com.example.flickfind.ui.Navigation.MovieDetailRoute
 import com.example.flickfind.ui.auth.AuthScreen
 import com.example.flickfind.ui.home.HomeScree
@@ -116,9 +117,11 @@ fun FlickFindApp() {
 
         // 2. Luồng Home
         composable<HomeRoute> {
+            val homeViewModel: com.example.flickfind.ui.home.HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
             HomeScree(
+                viewModel = homeViewModel,
                 onLogout = {
-                    auth.signOut()
+                    homeViewModel.logout()
                     navController.navigate(AuthRoute) {
                         popUpTo(HomeRoute) { inclusive = true }
                     }
@@ -142,6 +145,9 @@ fun FlickFindApp() {
                     Log.d("NAVIGATION", "Navigating to SavedMoviesRoute")
                     navController.navigate(SavedMoviesRoute)
                 },
+                onCollectionsClick = {
+                    navController.navigate(CollectionsRoute)
+                },
                 onUnderDevelopmentClick = {
                     navController.navigate(UnderDevelopmentRoute)
                 }
@@ -155,6 +161,17 @@ fun FlickFindApp() {
                     navController.popBackStack()
                 },
                 onMovieClick = { _ ->
+                    navController.navigate(UnderDevelopmentRoute)
+                }
+            )
+        }
+
+        // 5. Bộ sưu tập
+        composable<CollectionsRoute> {
+            com.example.flickfind.ui.profile.CollectionsScreen(
+                onBack = { navController.popBackStack() },
+                onCollectionClick = { id, name ->
+                    // Có thể tạo màn hình chi tiết collection sau
                     navController.navigate(UnderDevelopmentRoute)
                 }
             )

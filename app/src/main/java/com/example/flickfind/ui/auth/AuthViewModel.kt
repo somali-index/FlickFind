@@ -2,17 +2,27 @@ package com.example.flickfind.ui.auth
 
 import android.util.Log
 import android.util.Patterns
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.flickfind.DATALAYER.AppRepository.Repository
+import com.example.flickfind.DATALAYER.Remote.AppRemote
+import com.example.flickfind.DATALAYER.Room.AppDatabase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel(application: android.app.Application) : AndroidViewModel(application) {
 
     // Firebase Auth
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    
+    private val repository = Repository(
+        remote = AppRemote(),
+        movieDao = AppDatabase.getDatabase(application).movieDao()
+    )
 
     // Backing property
     private val _uiState = MutableStateFlow(AuthUiState())
@@ -75,8 +85,10 @@ class AuthViewModel : ViewModel() {
             )
         }
     }
+    
     fun logout(){
         auth.signOut()
+        repository.clearLocalUser() // Xóa dữ liệu user trong Room khi đăng xuất
 
         _uiState.update {
             AuthUiState(
@@ -84,6 +96,7 @@ class AuthViewModel : ViewModel() {
             )
         }
     }
+    
     fun resetSuccessState() {
         _uiState.update {
             it.copy(
@@ -151,8 +164,6 @@ class AuthViewModel : ViewModel() {
         }
 
         return isValid
-        Log.d("Login","Login resault = ${isValid}")
-
     }
 
     private fun validateRegisterInput(): Boolean {
@@ -217,13 +228,15 @@ class AuthViewModel : ViewModel() {
 
             if (task.isSuccessful) {
                 Log.d("Login","Mật khẩu và Email đã đúng")
-
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isSuccess = true
-
-                    )
+                
+                // Fetch và save profile vào Room trước khi báo success
+                repository.getUserProfile(state.email) { name, avatar ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isSuccess = true
+                        )
+                    }
                 }
 
             } else {
@@ -260,12 +273,23 @@ class AuthViewModel : ViewModel() {
         ).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
-
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isSuccess = true
-                    )
+                // Sau khi đăng ký thành công, tạo User trên Firestore
+                val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                val userMap = hashMapOf(
+                    "Email" to state.email,
+                    "UserName" to state.fullName,
+                    "Pass" to state.password,
+                    "IDUser" to (auth.currentUser?.uid ?: ""),
+                    "avatar" to ""
+                )
+                
+                db.collection("User").add(userMap).addOnCompleteListener {
+                     _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isSuccess = true
+                        )
+                    }
                 }
 
             } else {
