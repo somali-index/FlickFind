@@ -1,5 +1,0 @@
--keep class com.flickfind.app.data.model.** { *; }
--keep class retrofit2.** { *; }
--keep class okhttp3.** { *; }
--dontwarn okhttp3.**
--dontwarn retrofit2.**
