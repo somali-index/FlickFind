@@ -1,0 +1,90 @@
+[
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_search_bar.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_search_bar.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_poster_scrim.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_poster_scrim.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/color_chip_stroke_color.xml.flat",
+        "source": "com.flickfind.app-main-93:/color/chip_stroke_color.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/font_font_readme.xml.flat",
+        "source": "com.flickfind.app-main-93:/font/font_readme.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_placeholder_poster.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/placeholder_poster.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/color_chip_bg_color.xml.flat",
+        "source": "com.flickfind.app-main-93:/color/chip_bg_color.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.flickfind.app-main-93:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_rating_badge.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_rating_badge.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/menu_bottom_nav_menu.xml.flat",
+        "source": "com.flickfind.app-main-93:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_featured_scrim.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_featured_scrim.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_genre_tag.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_genre_tag.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_card.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_card.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_login.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_login.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/color_text_field_stroke_color.xml.flat",
+        "source": "com.flickfind.app-main-93:/color/text_field_stroke_color.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_button_primary.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_button_primary.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.flickfind.app-main-93:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_detail_scrim.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_detail_scrim.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_hot_badge.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_hot_badge.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/drawable_bg_bottom_nav.xml.flat",
+        "source": "com.flickfind.app-main-93:/drawable/bg_bottom_nav.xml"
+    },
+    {
+        "merged": "com.flickfind.app-debug-91:/color_bottom_nav_color.xml.flat",
+        "source": "com.flickfind.app-main-93:/color/bottom_nav_color.xml"
+    }
+]

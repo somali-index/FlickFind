@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    Font file placeholder.
+    
+    Để sử dụng font Inter:
+    1. Tải Inter font từ: https://fonts.google.com/specimen/Inter
+    2. Đặt các file .ttf vào thư mục res/font/:
+       - inter_regular.ttf
+       - inter_medium.ttf  
+       - inter_bold.ttf
+    3. Tạo file res/font/inter.xml với nội dung:
+    
+    <font-family xmlns:android="http://schemas.android.com/apk/res/android">
+        <font android:fontStyle="normal" android:fontWeight="400" android:font="@font/inter_regular" />
+        <font android:fontStyle="normal" android:fontWeight="500" android:font="@font/inter_medium" />
+        <font android:fontStyle="normal" android:fontWeight="700" android:font="@font/inter_bold" />
+    </font-family>
+    
+    Hoặc dùng Google Fonts:
+    Trong themes.xml thay @font/inter bằng sans-serif để dùng font hệ thống.
+-->
+<merge />
